@@ -55,6 +55,7 @@ Coding style and name conventions are described in the official [PEP8](https://w
 
 * Describes the pattern and technique used to solve the problem.
 
+
 ## Categories
 
 Each solution/problem in this repo belongs to one of these categories:
@@ -67,6 +68,52 @@ Each solution/problem in this repo belongs to one of these categories:
 6. [Strings](https://github.com/sagarneeli/coding-challenges/tree/master/Strings) - String Manipulations, Reversing, Encodings/Decodings, etc.
 7. [Math](https://github.com/sagarneeli/coding-challenges/tree/master/Math) - GCD, LCM, Factorization, Geometry, Math Formulas, etc.
 8. [Other](https://github.com/sagarneeli/coding-challenges/tree/master/Other) - Backtracking, BFS, DFS, Stacks, Queues, Deques, Priority Queues (Heaps), Matrices, etc.
+
+    
+## Repo Structure
+
+```
+coding-challenges             # Repo
+├─ Arrays                     # Category of challenges
+│  ├─ rotation.ipynb          # Solution notebook
+│  ├─ compress_solution.ipynb
+│  ├─ ...
+├─ linked_lists
+│  ├─ palindrome
+│  ├─ ...
+├─ ...
+```
+
+
+## Notebook Installation
+
+### Jupyter Notebook
+
+Run:
+
+```
+pip install jupyter
+```
+
+For more details on notebook installation, follow the directions [here](http://ipython.org/install.html).
+
+More information on IPython/Jupyter Notebooks can be found [here](http://ipython.org/notebook.html).
+
+
+## Running Challenges
+
+```
+$ git clone https://github.com/sagarneeli/coding-challenges.git
+$ cd interactive-coding-challenges
+$ jupyter notebook
+```
+
+## Contact Info
+
+Feel free to contact me to discuss any issues, questions, or comments.
+
+My contact info can be found on my [GitHub page](https://github.com/sagarneeli).
+
 
 ### Training Sites
 
@@ -130,47 +177,3 @@ If the problems from [LeetCode](https://leetcode.com/) are not enough and you ne
     - [USFCA Visualization Tool](https://www.cs.usfca.edu/~galles/visualization/Algorithms.html) - Great tool for visualizing data structures and algorithms, created by the University of San Francisco.
     - [VisuAlgo](https://visualgo.net/en) - Another great tool for visualizing data structures and algorithms through animation.
     - [Algorithm Visualizer](https://algorithm-visualizer.org/) - Interactive online platform that visualizes algorithms from code. This platform is an open-source project, [here](https://github.com/algorithm-visualizer/algorithm-visualizer) you can find the source code.
-    
-## Repo Structure
-
-```
-coding-challenges             # Repo
-├─ Arrays                     # Category of challenges
-│  ├─ rotation.ipynb          # Solution notebook
-│  ├─ compress_solution.ipynb
-│  ├─ ...
-├─ linked_lists
-│  ├─ palindrome
-│  ├─ ...
-├─ ...
-```
-
-
-## Notebook Installation
-
-### Jupyter Notebook
-
-Run:
-
-```
-pip install jupyter
-```
-
-For more details on notebook installation, follow the directions [here](http://ipython.org/install.html).
-
-More information on IPython/Jupyter Notebooks can be found [here](http://ipython.org/notebook.html).
-
-
-## Running Challenges
-
-```
-$ git clone https://github.com/sagarneeli/coding-challenges.git
-$ cd interactive-coding-challenges
-$ jupyter notebook
-```
-
-## Contact Info
-
-Feel free to contact me to discuss any issues, questions, or comments.
-
-My contact info can be found on my [GitHub page](https://github.com/sagarneeli).
