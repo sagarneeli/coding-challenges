@@ -156,8 +156,21 @@ Run:
 pip install jupyter
 ```
 
-For detailed instructions, scripts, and tools to more optimally set up your development environment, check out the [dev-setup](https://github.com/donnemartin/dev-setup) repo.
-
 For more details on notebook installation, follow the directions [here](http://ipython.org/install.html).
 
 More information on IPython/Jupyter Notebooks can be found [here](http://ipython.org/notebook.html).
+
+
+## Running Challenges
+
+```
+$ git clone https://github.com/sagarneeli/coding-challenges.git
+$ cd interactive-coding-challenges
+$ jupyter notebook
+```
+
+## Contact Info
+
+Feel free to contact me to discuss any issues, questions, or comments.
+
+My contact info can be found on my [GitHub page](https://github.com/sagarneeli).
