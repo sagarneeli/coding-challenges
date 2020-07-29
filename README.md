@@ -1,6 +1,18 @@
 # Coding Problems
 
-Here you can find [solutions](#Solutions) for various coding/algorithmic problems and many useful [tips]/[patterns](#Learning-Resources) for solving common interview problems.\
+Here you can find notebooks with [solutions](#Solutions) for various challenges that focus on algorithms and data structures found in coding interviews.
+
+Each challenge has one or more reference solutions that are:
+- Fully functional
+- Unit tested
+- Easy-to-understand
+
+Notebooks also detail:
+- Constraints
+- Test cases
+- Algorithms
+- Big-O time and space complexities
+
 Also, this repo will be updated with new solutions and resources from time to time.
 
 *Note that this repo is meant to be used for learning and researching purposes only and it is **not** meant to be used for production.*
@@ -20,69 +32,30 @@ Coding style and name conventions are described in the official [PEP8](https://w
 *Note that I'm **not** the author of these problems, they are from sites like [LeetCode](https://leetcode.com/) (you can find more than 40 sites like this in the [Training Sites](#Training-Sites) section). **Only** the solutions and explanations are mine.*
 
 
-### Template
+## Notebook Structure
+### Source
 
-For easier navigation into the solutions, each file with a solution in this repo will have the following template:
+* Eg Leetcode, Geeksforgeeks etc
 
-```python
-'''
-Problem Name
+### Problem Statement
 
-Problem explanation.
+* States the problem to solve.
+* Input parameters
+* Output result
 
-Input: XXX
-Output: XXX
-Output explanation: XXX
+### Constraints
 
-=========================================
-Solution 1 explanation.
-    Time Complexity:    O(X)
-    Space Complexity:   O(X)
-Solution 2 explanation.
-(some of the problems are solved in more than one way)
-    Time Complexity:    O(X)
-    Space Complexity:   O(X)
-'''
+* Describes any constraints or assumptions.
 
+### Test Cases
 
-##############
-# Solution 1 #
-##############
+* Describes the general and edge test cases that will be evaluated in the unit test.
 
-def name_of_solution_1(params):
-    # description of code
-    pass
+### Algorithm and notes
 
+* Describes the pattern and technique used to solve the problem.
 
-##############
-# Solution 2 #
-##############
-
-def name_of_solution_2(params):
-    # description of code
-    pass
-
-
-###########
-# Testing #
-###########
-
-# Test 1
-# Correct result => 'result1'
-test_val = 'example1'
-print(name_of_solution_1(test_val))
-print(name_of_solution_2(test_val))
-
-# Test 2
-# Correct result => 'result2'
-test_val = 'example2'
-print(name_of_solution_1(test_val))
-print(name_of_solution_2(test_val))
-```
-
-*Note that here I'm using the **simplest** way of testing, printing the results using the [print](https://docs.python.org/3/library/functions.html#print) method. Why? Because I think that the bigger part of the users of this repo isn't familiar with [unit testing](https://en.wikipedia.org/wiki/Unit_testing) and I wanted this part to be intuitive. Btw, I strongly recommend using some unit testing framework for this kind of testing. The Python Standard Library contains a **great** framework for unit testing called [unittest](https://docs.python.org/3/library/unittest.html), or you can install some third-party unit testing framework like [pytest](https://docs.pytest.org/en/latest/).*
-
-### Categories
+## Categories
 
 Each solution/problem in this repo belongs to one of these categories:
 
@@ -157,3 +130,34 @@ If the problems from [LeetCode](https://leetcode.com/) are not enough and you ne
     - [USFCA Visualization Tool](https://www.cs.usfca.edu/~galles/visualization/Algorithms.html) - Great tool for visualizing data structures and algorithms, created by the University of San Francisco.
     - [VisuAlgo](https://visualgo.net/en) - Another great tool for visualizing data structures and algorithms through animation.
     - [Algorithm Visualizer](https://algorithm-visualizer.org/) - Interactive online platform that visualizes algorithms from code. This platform is an open-source project, [here](https://github.com/algorithm-visualizer/algorithm-visualizer) you can find the source code.
+    
+## Repo Structure
+
+```
+coding-challenges             # Repo
+├─ Arrays                     # Category of challenges
+│  ├─ rotation.ipynb          # Solution notebook
+│  ├─ compress_solution.ipynb
+│  ├─ ...
+├─ linked_lists
+│  ├─ palindrome
+│  ├─ ...
+├─ ...
+```
+
+
+## Notebook Installation
+
+### Jupyter Notebook
+
+Run:
+
+```
+pip install jupyter
+```
+
+For detailed instructions, scripts, and tools to more optimally set up your development environment, check out the [dev-setup](https://github.com/donnemartin/dev-setup) repo.
+
+For more details on notebook installation, follow the directions [here](http://ipython.org/install.html).
+
+More information on IPython/Jupyter Notebooks can be found [here](http://ipython.org/notebook.html).
