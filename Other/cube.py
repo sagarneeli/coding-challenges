@@ -18,3 +18,27 @@ Output - (new ordering of block) = [2, 1, 0]
 Input - blocks = [['A', 'B', 'C'], ['C', 'Y', 'Z'], ['P', 'R', 'S']], message = 'CAR' 
 Output - (new ordering of block) = [1, 0, 2]
 """
+
+def find_block_ordering(blocks, message):
+    def can_spell(block, char):
+        return char in block
+
+    def backtrack(index, current_ordering):
+        if index == len(message):
+            return current_ordering
+
+        for i, block in enumerate(blocks):
+            if i not in current_ordering and can_spell(block, message[index]):
+                new_ordering = current_ordering + [i]
+                result = backtrack(index + 1, new_ordering)
+                if result:
+                    return result
+        return None
+
+    return backtrack(0, [])
+
+# Example usage
+blocks = [['A', 'B', 'C', ''], ['X', 'Y', 'Z'], ['P', 'R', 'S']]
+message = 'SYB'
+ordering = find_block_ordering(blocks, message)
+print(ordering)  # Output: [2, 1, 0]
