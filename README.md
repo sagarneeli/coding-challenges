@@ -1,13 +1,13 @@
 # Coding Problems
 
-Here you can find notebooks with [solutions](#Solutions) for various challenges that focus on algorithms and data structures found in coding interviews.
+Here you can find [solutions](#Solutions) for various challenges that focus on algorithms and data structures found in coding interviews.
 
 Each challenge has one or more reference solutions that are:
 - Fully functional
 - Unit tested
 - Easy-to-understand
 
-Notebooks also detail:
+Solutions also detail:
 - Constraints
 - Test cases
 - Algorithms
@@ -31,82 +31,6 @@ Coding style and name conventions are described in the official [PEP8](https://w
 
 *Note that I'm **not** the author of these problems, they are from sites like [LeetCode](https://leetcode.com/) (you can find more than 40 sites like this in the [Training Sites](#Training-Sites) section). **Only** the solutions and explanations are mine.*
 
-
-## Notebook Structure
-### Source
-
-* Eg Leetcode, Geeksforgeeks etc
-
-### Problem Statement
-
-* States the problem to solve.
-* Input parameters
-* Output result
-
-### Constraints
-
-* Describes any constraints or assumptions.
-
-### Test Cases
-
-* Describes the general and edge test cases that will be evaluated in the unit test.
-
-### Algorithm and notes
-
-* Describes the pattern and technique used to solve the problem.
-
-
-## Categories
-
-Each solution/problem in this repo belongs to one of these categories:
-
-1. [Arrays](https://github.com/sagarneeli/coding-challenges/tree/master/Arrays) - Array Manipulations, Sorting, Binary Search, Divide and Conquer, Sliding Window, etc.
-2. [Linked Lists](https://github.com/sagarneeli/coding-challenges/tree/master/Linked%20Lists) - Linked List Searching, Pointer Manipulations, etc.
-3. [Trees](https://github.com/sagarneeli/coding-challenges/tree/master/Trees) - Binary Search Trees, Tree Traversals: Breadth-First (Level Order) Traversal, Depth-First Traversal (Inorder, Preorder, Postorder), etc.
-4. [Hashing DS](https://github.com/sagarneeli/coding-challenges/tree/master/Hashing%20DS) - Hashing Data Structures: Sets/HashSets and Dictionaries/HashMaps.
-5. [Dynamic Programming](https://github.com/sagarneeli/coding-challenges/tree/master/Dynamic%20Programming) - 2D and 1D Dynamic Programming, LCS, LIS, Knapsack, etc.
-6. [Strings](https://github.com/sagarneeli/coding-challenges/tree/master/Strings) - String Manipulations, Reversing, Encodings/Decodings, etc.
-7. [Math](https://github.com/sagarneeli/coding-challenges/tree/master/Math) - GCD, LCM, Factorization, Geometry, Math Formulas, etc.
-8. [Other](https://github.com/sagarneeli/coding-challenges/tree/master/Other) - Backtracking, BFS, DFS, Stacks, Queues, Deques, Priority Queues (Heaps), Matrices, etc.
-
-    
-## Repo Structure
-
-```
-coding-challenges             # Repo
-├─ Arrays                     # Category of challenges
-│  ├─ rotation.ipynb          # Solution notebook
-│  ├─ compress_solution.ipynb
-│  ├─ ...
-├─ linked_lists
-│  ├─ palindrome
-│  ├─ ...
-├─ ...
-```
-
-
-## Notebook Installation
-
-### Jupyter Notebook
-
-Run:
-
-```
-pip install jupyter
-```
-
-For more details on notebook installation, follow the directions [here](http://ipython.org/install.html).
-
-More information on IPython/Jupyter Notebooks can be found [here](http://ipython.org/notebook.html).
-
-
-## Running Challenges
-
-```
-$ git clone https://github.com/sagarneeli/coding-challenges.git
-$ cd interactive-coding-challenges
-$ jupyter notebook
-```
 
 ## Contact Info
 
