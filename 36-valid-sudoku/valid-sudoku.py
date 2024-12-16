@@ -1,11 +1,12 @@
 class Solution:
     def isValidSudoku(self, board: List[List[str]]) -> bool:
+        n = len(board)
         cols = defaultdict(set)
         rows = defaultdict(set)
         squares = defaultdict(set)  
 
-        for r in range(9):
-            for c in range(9):
+        for r in range(n):
+            for c in range(n):
                 if board[r][c] == ".":
                     continue
                 if ( board[r][c] in rows[r]
