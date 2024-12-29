@@ -1,6 +1,7 @@
 from collections import defaultdict, deque
 
 class MusicPlayer:
+    """A music player system that tracks songs, user listening history, and play statistics."""
     def __init__(self):
         self.song_catalog = {}  # Maps song_id to song_title
         self.song_listens = defaultdict(set)  # Maps song_id to set of user_ids who listened
