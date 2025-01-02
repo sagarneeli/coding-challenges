@@ -1,11 +1,17 @@
 from collections import defaultdict, deque
 
+
 class MusicPlayer:
     """A music player system that tracks songs, user listening history, and play statistics."""
+
     def __init__(self):
         self.song_catalog = {}  # Maps song_id to song_title
-        self.song_listens = defaultdict(set)  # Maps song_id to set of user_ids who listened
-        self.user_play_history = defaultdict(deque)  # Maps user_id to deque of last 3 song_ids
+        self.song_listens = defaultdict(
+            set
+        )  # Maps song_id to set of user_ids who listened
+        self.user_play_history = defaultdict(
+            deque
+        )  # Maps user_id to deque of last 3 song_ids
         self.next_song_id = 1  # Incremental song_id generator
 
     def add_song(self, song_title):
@@ -35,7 +41,9 @@ class MusicPlayer:
     def print_summary(self, k=None):
         """Prints song names and unique listens in descending order of unique listens."""
         # Create a list of (song_id, unique_listens) pairs
-        summary = [(song_id, len(users)) for song_id, users in self.song_listens.items()]
+        summary = [
+            (song_id, len(users)) for song_id, users in self.song_listens.items()
+        ]
         # Sort by unique listens (descending) and then by song_id (ascending)
         summary.sort(key=lambda x: (-x[1], x[0]))
 
@@ -54,6 +62,7 @@ class MusicPlayer:
         print(f"Last 3 songs played by User {user_id}:")
         for song_id in list(self.user_play_history[user_id]):
             print(f"- {self.song_catalog[song_id]}")
+
 
 # Example usage
 if __name__ == "__main__":

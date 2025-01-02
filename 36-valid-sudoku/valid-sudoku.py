@@ -1,3 +1,6 @@
+from typing import List
+from collections import defaultdict
+
 class Solution:
     def isValidSudoku(self, board: List[List[str]]) -> bool:
         n = len(board)

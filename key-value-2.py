@@ -7,22 +7,22 @@ class KV:
         if key in self.data:
             return self.data[key]
         return None
-    
+
     def set(self, key, value):
         if self.transaction_stack:
             if key not in self.transaction_stack[-1]:
                 self.transaction_stack[-1][key] = self.data.get(key, None)
         self.data[key] = value
-    
+
     def delete(self, key):
         if self.transaction_stack:
             if key not in self.transaction_stack[-1]:
                 self.transaction_stack[-1][key] = self.data.get(key, None)
         self.data.pop(key, None)
-    
+
     def begin(self):
         self.transaction_stack.append({})
-    
+
     def commit(self):
         if not self.transaction_stack:
             return
@@ -30,7 +30,7 @@ class KV:
             self.transaction_stack.pop()
         else:
             top_transaction = self.transaction_stack.pop()
-            for key, value in top_transaction.items():
+            for key, _ in top_transaction.items():
                 if key not in self.transaction_stack[-1]:
                     self.transaction_stack[-1][key] = self.data.get(key, None)
 
