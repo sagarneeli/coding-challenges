@@ -1,3 +1,6 @@
+from typing import List
+
+
 class Solution:
     def isArraySpecial(self, nums: List[int], queries: List[List[int]]) -> List[bool]:
         n = len(nums)
@@ -21,4 +24,3 @@ class Solution:
             # Check if the query range [start, end] lies within the max reachable range
             ans.append(end_query <= max_reach[start])
         return ans
-        
