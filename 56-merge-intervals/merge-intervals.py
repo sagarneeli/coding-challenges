@@ -4,13 +4,15 @@ class Solution:
             return intervals
 
         intervals.sort(key=lambda x: x[0])
-        result = []
+        result = [intervals[0]]
 
-        for interval in intervals:
-            if not result or result[-1][1] < interval[0]:
-                result.append(interval)
+        for curr_start, curr_end in intervals[1:]:
+            prev_start, prev_end = result[-1]
+
+            if prev_end >= curr_start:
+                result[-1][1] = max(prev_end, curr_end)
             else:
-                result[-1][1] = max(result[-1][1], interval[1])
+                result.append([curr_start, curr_end])
 
         return result
         
