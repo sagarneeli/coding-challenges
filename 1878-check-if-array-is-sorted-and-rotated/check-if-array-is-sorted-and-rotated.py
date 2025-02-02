@@ -3,7 +3,7 @@ class Solution:
         N = len(nums)
         count = 1
 
-        for i in range(1, N * N):
+        for i in range(1, 2 * N):
             if nums[(i - 1) % N] <= nums[i % N]:
                 count += 1
             else:
