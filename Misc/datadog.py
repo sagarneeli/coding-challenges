@@ -206,6 +206,6 @@ def count_repeated_words(paragraph):
     return {word: count for word, count in word_count.items() if count > 1}
 
 
-paragraph = "Apple apple's banana  they're they are they're apple orange3 banana apple's Orange3 orange orange. something"
-word_repetitions = count_repeated_words(paragraph)
+test_paragraph = "Apple apple's banana  they're they are they're apple orange3 banana apple's Orange3 orange orange. something"
+word_repetitions = count_repeated_words(test_paragraph)
 print(word_repetitions)
