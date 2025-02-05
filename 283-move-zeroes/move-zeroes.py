@@ -7,13 +7,14 @@ class Solution:
         i, j = 0, 0
 
         while j < N:
-            if nums[i] == 0 and nums[j] != 0:
-                nums[i], nums[j] = nums[j], nums[i]
-                # i += 1
-                # j += 1
-            elif nums[i] != 0 and i < j:
+            if nums[i] != 0 and i < j:
                 i += 1
-            else:
+            elif nums[j] == 0:
                 j += 1
+            else:
+                nums[i], nums[j] = nums[j], nums[i]
+                i += 1
+                j += 1
+                
 
         
