@@ -1,5 +1,9 @@
 class Solution:
     def addStrings(self, num1: str, num2: str) -> str:
+        """
+        Time: O(max(N1,N2))
+        Space: O(max(N1,N2))
+        """
         carry = 0
         i, j = len(num1) - 1, len(num2) - 1
         result = []
