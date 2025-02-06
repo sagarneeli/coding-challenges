@@ -1,5 +1,8 @@
 class Solution:
     def areAlmostEqual(self, s1: str, s2: str) -> bool:
+        # Time - O(N)
+        # Space - O(1)
+
         indexes = []
 
         for i in range(len(s1)):
