@@ -4,12 +4,11 @@ class SparseVector:
 
     # Return the dotProduct of two sparse vectors
     def dotProduct(self, vec: 'SparseVector') -> int:
-        total = 0
-        
+        result = 0
         for a, b in zip(self.nums, vec.nums):
-            total += a * b
+            result += a * b
         
-        return total
+        return result
         
 
 # Your SparseVector object will be instantiated and called as such:
