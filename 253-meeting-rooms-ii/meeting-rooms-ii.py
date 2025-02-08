@@ -1,3 +1,6 @@
+from typing import List
+
+
 class Solution:
     def minMeetingRooms(self, intervals: List[List[int]]) -> int:
         """
@@ -13,9 +16,8 @@ class Solution:
 
         min_meetings = 0
         curr = 0
-        for timestamp, tag in sorted(line_sweep):
+        for _, tag in sorted(line_sweep):
             curr += tag
             min_meetings = max(min_meetings, curr)
 
         return min_meetings
-        
