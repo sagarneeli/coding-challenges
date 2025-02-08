@@ -10,8 +10,6 @@ class Solution:
 
             i, j = 0, 0
             while i < M and j < N:
-                print(string[i])
-                print(pattern[j])
                 if string[i] == pattern[j]:
                     i += 1
                     j += 1
