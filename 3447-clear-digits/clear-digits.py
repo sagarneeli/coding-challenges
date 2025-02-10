@@ -9,11 +9,8 @@ class Solution:
         stack = []
 
         for ch in s:
-            if ch.isdigit():
-                if stack:
-                    stack.pop()
-                else:
-                    return ""
+            if ch.isdigit() and stack:
+                stack.pop()
             else:
                 stack.append(ch)
 
