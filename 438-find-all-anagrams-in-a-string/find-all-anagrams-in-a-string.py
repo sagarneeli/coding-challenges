@@ -21,8 +21,7 @@ class Solution:
                 char_count_p[ch] -= 1
                 if char_count_p[ch] == 0:
                     missing -= 1
-                    print(missing)
-
+                    
             right += 1
     
             if missing == 0:
