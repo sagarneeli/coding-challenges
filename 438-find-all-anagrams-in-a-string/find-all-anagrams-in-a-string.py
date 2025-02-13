@@ -7,6 +7,12 @@ class Solution:
         k = len(p)
 
         while right < len(s):
+            ch = s[right]
+            if ch in char_count_p:
+                char_count_p[ch] -= 1
+                if char_count_p[ch] == 0:
+                    missing -= 1
+
             if right - left == k:
                 ch = s[left]
                 if ch in char_count_p:
@@ -14,13 +20,6 @@ class Solution:
                     if char_count_p[ch] == 1:
                         missing += 1
                 left += 1
-
-
-            ch = s[right]
-            if ch in char_count_p:
-                char_count_p[ch] -= 1
-                if char_count_p[ch] == 0:
-                    missing -= 1
                     
             right += 1
     
