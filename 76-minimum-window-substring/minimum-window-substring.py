@@ -24,6 +24,6 @@ class Solution:
                     if dict_t[ch] == 1:
                         missing += 1
                 left += 1
-        print(result_index, result_size)
+        
         return s[result_index: result_size + result_index] if result_index != -1 else ""
         
