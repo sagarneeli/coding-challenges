@@ -1,28 +1,24 @@
 class Solution:
     def calculate(self, s: str) -> int:
-        s += '+'  # Append a '+' to force the last number to be processed
-        result, last_number, current_number = 0, 0, 0
-        operator = '+'
-        
-        for char in s:
-            if char.isdigit():
-                current_number = current_number * 10 + int(char)  # Build multi-digit numbers
+        stack = []
+        num = 0
+        op = "+"
+
+        for i, ch in enumerate(s):
+            if ch.isdigit():
+                num = num * 10 + int(ch)
             
-            if char in "+-*/":  # Process current_number when an operator is encountered
-                if operator == '+':
-                    result += last_number
-                    last_number = current_number
-                elif operator == '-':
-                    result += last_number
-                    last_number = -current_number
-                elif operator == '*':
-                    last_number *= current_number
-                elif operator == '/':
-                    last_number = int(last_number / current_number)  # Truncate toward zero
+            if ch in "+-*/" or i == len(s) - 1:
+                if op == "+":
+                    stack.append(num)
+                if op == "-":
+                    stack.append(-num)
+                if op == "*":
+                    stack.append(stack.pop() * num)
+                if op == "/":
+                    stack.append(int(stack.pop() / num))
+                
+                op = ch
+                num = 0
 
-                operator = char  # Update operator
-                current_number = 0  # Reset current number
-        
-        return result + last_number  # Add the last processed number
-
-        
+        return sum(stack)        
