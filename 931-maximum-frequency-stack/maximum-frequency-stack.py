@@ -1,5 +1,7 @@
-class FreqStack:
+from collections import defaultdict
 
+
+class FreqStack:
     def __init__(self):
         self.freq = defaultdict(int)
         self.group = defaultdict(list)
@@ -17,8 +19,6 @@ class FreqStack:
         if not self.group[self.max_freq]:
             self.max_freq -= 1
         return val
-
-        
 
 
 # Your FreqStack object will be instantiated and called as such:

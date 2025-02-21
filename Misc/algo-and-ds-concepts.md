@@ -88,6 +88,15 @@ it's parent will be `[i / 2]`
    1. By Stack
    2. By Recursion
 
+### DFS Recursion
+1. Most of the DFS tree problems are solved using recursion
+2. The following process takes place on every subtree during the recursion
+   1. For the problem f(root)
+   2. Break it down into subproblems f(root.leftSubtree) and f(root.rightSubtree)
+   3. Recursively solve the subproblems
+   4. Combine the results of the subproblems to solve the major problem f(root)
+
+
 ### DFS Recursive solution has 2 parts
 
 1. Learn the base case usually at the bottom of the tree.
@@ -106,7 +115,7 @@ Time Complexity - O(N)
 ```python
 def dfs(root):
     # base case(s)
-    if not root:
+    if not root: # leaf node may also be a base case i.e node.left and node.right are None
         return ?
     
     # general cases
@@ -114,6 +123,202 @@ def dfs(root):
     right = dfs(root.right)
     result = ? # handle and combine root and left and right
     return result # all the return statements answer the same question
+```
+
+### Tree Size
+
+Get the number of nodes in a tree
+        1
+       / \
+      2   3
+     / \  / \
+    4   5 6  7
+          / \
+         8   9
+```mermaid
+graph TD;
+    1 --> 2;
+    1 --> 3;
+    2 --> 4;
+    2 --> 5;
+    3 --> 6;
+    3 --> 7;
+    6 --> 8;
+    6 --> 9;
+```
+
+```python
+def dfs(root): # return count of nodes in the tree
+    # base case
+   if not root: # answer for the empty tree
+      return 0
+   
+   # general case
+   left = dfs(root.left)
+   right = dfs(root.right)
+
+   # handle and combine root and left and right
+   result = 1 + left + right # key - handle current node properly so that the same pattern will recur on all the nodes.
+   return result
+```
+
+Similarly, get the maximum path sum (from root to leaf)
+
+```python
+def dfs(root): # return count of nodes in the tree
+    # base case
+   if not root: # answer for the empty tree
+      return 0
+   
+   # general case
+   left = dfs(root.left)
+   right = dfs(root.right)
+
+   # handle and combine root and left and right
+   result = root.val + max(left, right) # key - handle current node properly so that the same pattern will recur on all the nodes.
+   return result
+```
+
+Get the sum of values of a binary tree
+
+```python
+def dfs(root): # return count of nodes in the tree
+    # base case
+   if not root: # answer for the empty tree
+      return 0
+   
+   # general case
+   left = dfs(root.left)
+   right = dfs(root.right)
+
+   # handle and combine root and left and right
+   result = root.val + left + right # key - handle current node properly so that the same pattern will recur on all the nodes.
+   return result
+```
+
+Get the sum of values of a binary tree
+        
+```python
+def dfs(root): # return count of nodes in the tree
+    # base case
+   if not root: # answer for the empty tree
+      return 0
+   
+   # general case
+   left = dfs(root.left)
+   right = dfs(root.right)
+
+   # handle and combine root and left and right
+   result = 1 + max(left, right) # key - handle current node properly so that the same pattern will recur on all the nodes.
+   return result
+```
+
+### Clone Tree
+
+How to clone a binary tree?
+
+```python
+class TreeNode:
+   def __init__(self, val):
+      self.val = val
+      self.left = None
+      self.right = None 
+
+def cloneTreeDFS(root): # return a deep copy of the given tree
+   if not root:
+      return None
+   
+   copy = TreeNode(root.val)
+   copy.left = cloneTreeDFS(root.left)
+   copy.right = cloneTreeDFS(root.right)
+   return copy
+```
+
+### Search Tree Node
+
+Find if node n is in the tree
+
+```python
+def search(root, n):
+   if not root:
+      return False
+   
+   left = search(root.left, n)
+   right = search(root.right, n)
+
+   return root.val == n or dfs(root.left) or dfs(root.right)
+```
+
+Find if node n or node m is in the tree
+
+```python
+def search(root, n, m):
+   if not root:
+      return False
+
+   if root.val == n or root.val == m:
+      return True
+   
+   left = search(root.left, n, m)
+   right = search(root.right, n, m)
+
+   return left or right
+```
+
+Find if node n or node m is in the tree
+
+```python
+def search(root, n, m):
+   if not root:
+      return False
+
+   if root.val == n or root.val == m:
+      return True
+   
+   left = search(root.left, n, m)    # (bool isMThere, bool isNThere) i.e (bool isMThere, position, infinity)
+   right = search(root.right, n, m)  # found 1 node return 1, found both return 2
+
+   return left and right   
+```
+
+### Symmetric Tree
+
+Find whether a binary tree is symmetric (find if 2 trees are mirror images of each other)
+
+        1
+       / \
+      2   2
+     / \  / \
+    3   4 4  3
+       /     \
+      5       5
+
+```mermaid
+graph TD;
+    1 --> 2;
+    1 --> 2;
+    2 --> 3;
+    2 --> 4;
+    2 --> 4;
+    2 --> 3;
+    4 --> 5;
+    4 --> 5;
+```
+
+```python
+def symmetric(root):
+   def isSymmetric(node1, node2):
+      if not node1 and not node2:
+         return True
+      if not node1 or not node2:
+         return False
+      
+      left = isSymmetric(node1.left, node2.right)
+      right = isSymmetric(node1.right, node2.left)
+      
+      return node1.val == node2.val and left and right
+
+   return isSymmetric(root, root)
 ```
 
 ### Extra-variable Bottom-up DFS
@@ -126,6 +331,63 @@ What is a balanced binary tree?
 A binary tree in which the left and right subtrees of every node differ in height by no more than 1.
 `-1 <= depthLeft - depthRight <= 1 on all subtrees`
 
+
+### Validate Balance Binary Tree
+
+Find if the tree is balanced? `-1 <= depthleft - depthright <= 1 on all subtrees`
+
+```python
+def validate(root):
+   isBalanced = True
+
+   def dfs(root):
+      if not root:
+         return True
+      
+      left = dfs(root.left)
+      right = dfs(root.right)
+
+      if abs(left - right) > 1:
+         isBalanced = True
+
+      return 1 + max(left, right)
+   
+   dfs(root)
+   return isBalanced
+
+# without global variable
+"""
+The expected output is a boolean value
+But since depth is needed for the balanced check,
+consolidate boolean and depth into "int" as return type
+
+Return an int
+int == -1 => Unbalanced denotes
+int > 0 => depth of the subtree
+"""
+def validate(root):
+   def dfs(root): # return an int, int == -1 => denotes Unbalanced, int > 0 => depth of the subtree
+      if not root:
+         return 0
+      
+      depthLeft = dfs(root.left)
+      depthRight = dfs(root.right)
+
+      # subtree is unbalanced, therefore tree is unbalanced
+      if depthLeft == -1 or depthRight == -1:
+         return -1
+
+      # Left depth and right depth difference is more than 1, therefore tree is unbalanced
+      if abs(depthLeft - depthRight) > 1:
+         isBalanced = True
+
+      # tree is balanced, return depth of the subtree
+      return 1 + max(depthLeft, depthRight)
+   
+   return dfs(root) != -1
+
+```
+
 What is a full binary tree?
 A tree in which every node other than the leaves have 2 children.
 or binary tree with the maximum number of nodes is a full binary tree.
@@ -134,6 +396,59 @@ If the height of a binary tree is H, then the height of a full binary tree is 2^
 What is a complete binary tree?
 A complete binary tree is a binary tree in which every level, except possibly the last, is completely filled, and all nodes are as far left as possible
 The height of a complete binary tree is always minimum i.e O(log N)
+
+### Diameter of a tree
+
+Find diameter:  Length of the longest path from leaf to leaf
+
+```
+        1
+       / \
+      2   3
+     / \  / \
+    4   5 6  7
+       / \
+      8   9
+     /   / | \
+    10  11 12 14
+   /
+  13
+```
+
+```mermaid
+graph TD;
+    1 --> 2;
+    1 --> 3;
+    2 --> 4;
+    2 --> 5;
+    3 --> 6;
+    3 --> 7;
+    5 --> 8;
+    5 --> 9;
+    8 --> 10;
+    10 --> 13;
+    9 --> 11;
+    9 --> 12;
+    9 --> 14;
+```
+
+```python
+def diameter(root):
+   diameter = 0 # set diameter as a global variable
+
+   def dfs(root): # let dfs() return the depth of the tree
+      if not root:
+         return 0
+      
+      depthLeft = dfs(root.left)
+      depthRight = dfs(root.right)
+
+      diameter = max(diameter, 1 + depthLeft + depthRight) # update global variable
+      return 1 + max(depthLeft, depthRight)
+
+   dfs(root)
+   return diameter
+```
 
 ### DFS Preorder traversal
 

@@ -1,3 +1,7 @@
+from collections import defaultdict
+from typing import List
+
+
 class Solution:
     def queryResults(self, limit: int, queries: List[List[int]]) -> List[int]:
         ball_map = defaultdict(int)
@@ -17,10 +21,5 @@ class Solution:
             color_map[color] += 1
 
             result.append(len(color_map))
-        
+
         return result
-        
-
-
-
-        
