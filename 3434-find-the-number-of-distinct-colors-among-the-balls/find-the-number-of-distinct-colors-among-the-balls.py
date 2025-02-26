@@ -4,6 +4,15 @@ from typing import List
 
 class Solution:
     def queryResults(self, limit: int, queries: List[List[int]]) -> List[int]:
+        """Processes queries to find the number of distinct colors among balls.
+
+        Args:
+            limit (int): The limit.
+            queries (List[List[int]]): A list of queries.
+
+        Returns:
+            List[int]: A list of results.
+        """
         ball_map = defaultdict(int)
         color_map = defaultdict(int)
         result = []

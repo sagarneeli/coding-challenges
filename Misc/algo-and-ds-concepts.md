@@ -448,6 +448,22 @@ def diameter(root):
 
    dfs(root)
    return diameter
+
+# Can you do it without using a global variable?
+# let dfs() return both depth of the tree and diameter of the tree
+def diameter(root):
+   def dfs(root):
+      if not root:
+         return (0, 0) # make sure all the return values are tuples, and consistently return both the variables
+      
+      diameterLeft, depthLeft = dfs(root.left)
+      diameterRight, depthRight = dfs(root.right)
+
+      diameter = max([diameterLeft, diameterRight, 1 + depthLeft + depthRight])
+      return (diameter, 1 + max(depthLeft, depthRight))
+
+   return dfs(root)
+
 ```
 
 ### DFS Preorder traversal
