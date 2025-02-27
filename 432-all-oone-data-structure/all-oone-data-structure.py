@@ -19,12 +19,6 @@ class AllOne:
         prev_node.next.prev = new_node
         prev_node.next = new_node
 
-    def _add_node_before(self, next_node, new_node):
-        new_node.next = next_node
-        new_node.prev = next_node.prev
-        next_node.prev.next = new_node
-        next_node.prev = new_node
-
     def _remove_node(self, node):
         node.prev.next = node.next
         node.next.prev = node.prev
@@ -32,26 +26,25 @@ class AllOne:
     def inc(self, key: str) -> None:
         if key in self.map:
             node = self.map[key]
-            freq = node.freq
-            nxt = node.next
-            new_freq = freq + 1
-            
             node.keys.remove(key)
+            new_freq = node.freq + 1
+            nxt = node.next
             if nxt == self.tail or nxt.freq != new_freq:
                 nxt = Node(new_freq)
                 self._add_node_after(node, nxt)
-
             nxt.keys.add(key)
             self.map[key] = nxt
             if not node.keys:
                 self._remove_node(node)
         else:
-            first = self.head.next
-            if first == self.tail or first.freq > 1:
-                first = Node(1)
-                self._add_node_after(self.head, first)
-            first.keys.add(key)
-            self.map[key] = first
+            # Key doesn't exist; add to the first node (or create one)
+            if self.head.next == self.tail or self.head.next.freq > 1:
+                new_node = Node(1)
+                self._add_node_after(self.head, new_node)
+            else:
+                new_node = self.head.next
+            new_node.keys.add(key)
+            self.map[key] = new_node
 
     def dec(self, key: str) -> None:
         if key not in self.map:
@@ -62,27 +55,24 @@ class AllOne:
         if node.freq == 1:
             del self.map[key]
         else:
-            prev = node.prev
-            freq = node.freq
-            new_freq = freq - 1
-            if prev == self.head or prev.freq != new_freq:
-                prev = Node(new_freq)
-                self._add_node_before(node, prev)
-            prev.keys.add(key)
-            self.map[key] = prev
+            # Try to use the previous node or create one if needed
+            if node.prev == self.head or node.prev.freq != node.freq - 1:
+                new_node = Node(node.freq - 1)
+                self._add_node_after(node.prev, new_node)
+                target = new_node
+            else:
+                target = node.prev
+            target.keys.add(key)
+            self.map[key] = target
 
         if not node.keys:
             self._remove_node(node)
 
     def getMaxKey(self) -> str:
-        if self.tail.prev == self.head:
-            return ""
-        return next(iter(self.tail.prev.keys))
+        return "" if self.tail.prev == self.head else next(iter(self.tail.prev.keys))
 
     def getMinKey(self) -> str:
-        if self.head.next == self.tail:
-            return ""
-        return next(iter(self.head.next.keys))
+        return "" if self.head.next == self.tail else next(iter(self.head.next.keys))
         
 
 
