@@ -10,13 +10,10 @@ class Solution:
             if not node:
                 return True
             
-            if node.val <= floor or node.val >= ceiling:
-                return False
-            
             left = dfs(node.left, floor, node.val)
             right = dfs(node.right, node.val, ceiling)
 
-            return left and right
+            return floor < node.val < ceiling and left and right
 
         return dfs(root, float("-inf"), float("inf"))
         
