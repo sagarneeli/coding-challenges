@@ -113,6 +113,7 @@ class WordFinderFromPhoneNumber:
 
     def words_from_phone_number(self, phone_number: str) -> List[str]:
         """Returns words matching the phone number."""
+        print(self.letter_to_digit_mapping)
         with self.lock:
             return list(self.dictionary_to_phone_numbers.get(phone_number, []))
 

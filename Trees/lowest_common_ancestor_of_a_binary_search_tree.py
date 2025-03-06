@@ -28,6 +28,8 @@ Definition of a BST
 - Both left and right subtrees are also BSTs.
 
 """
+
+
 # Definition for a binary tree node.
 class TreeNode:
     def __init__(self, x):
@@ -35,20 +37,24 @@ class TreeNode:
         self.left = None
         self.right = None
 
+
 class Solution:
     """
     Steps:
     1. Start traversing the tree from the root node.
     2. If both the nodes p and q are in the right subtree, then continue the search with right subtree starting step 1.
     3. If both the nodes p and q are in the left subtree, then continue the search with left subtree starting step 1.
-    4. If both step 2 and step 3 are not true, this means we have found the node which is common to node p's and q's subtrees. 
+    4. If both step 2 and step 3 are not true, this means we have found the node which is common to node p's and q's subtrees.
        and hence we return this common node as the LCA
 
     Complexity Analysis:
     Time Complexity - O(N), where N is the number of nodes
     Space Complexity - O(N), the call stack
     """
-    def lowestCommonAncestor(self, root: 'TreeNode', p: 'TreeNode', q: 'TreeNode') -> 'TreeNode':
+
+    def lowestCommonAncestor(
+        self, root: "TreeNode", p: "TreeNode", q: "TreeNode"
+    ) -> "TreeNode":
         # If both p and q are lesser than parent
         if p.val < root.val and q.val < root.val:
             return self.lowestCommonAncestor(root.left, p, q)
@@ -70,10 +76,13 @@ class Solution:
     - In essence of it the problem is iterative, it just wants us to find the split point. 
     - The point from where p and q won't be part of the same subtree or when one is the parent of the other.
     """
-    def lowestCommonAncestorIterative(self, root: 'TreeNode', p: 'TreeNode', q: 'TreeNode') -> 'TreeNode':
+
+    def lowestCommonAncestorIterative(
+        self, root: "TreeNode", p: "TreeNode", q: "TreeNode"
+    ) -> "TreeNode":
         node = root
         while node:
-            parent_val = node.val    
+            parent_val = node.val
             if p.val < parent_val and q.val < parent_val:
                 node = node.left
             if p.val > parent_val and q.val > parent_val:

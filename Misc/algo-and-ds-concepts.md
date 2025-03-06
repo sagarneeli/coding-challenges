@@ -128,13 +128,7 @@ def dfs(root):
 ### Tree Size
 
 Get the number of nodes in a tree
-        1
-       / \
-      2   3
-     / \  / \
-    4   5 6  7
-          / \
-         8   9
+
 ```mermaid
 graph TD;
     1 --> 2;
@@ -165,7 +159,7 @@ def dfs(root): # return count of nodes in the tree
 Similarly, get the maximum path sum (from root to leaf)
 
 ```python
-def dfs(root): # return count of nodes in the tree
+def dfs(root): # return maximum path sum
     # base case
    if not root: # answer for the empty tree
       return 0
@@ -182,7 +176,7 @@ def dfs(root): # return count of nodes in the tree
 Get the sum of values of a binary tree
 
 ```python
-def dfs(root): # return count of nodes in the tree
+def dfs(root): # return sum of values
     # base case
    if not root: # answer for the empty tree
       return 0
@@ -196,7 +190,7 @@ def dfs(root): # return count of nodes in the tree
    return result
 ```
 
-Get the sum of values of a binary tree
+Get the depth of a binary tree
         
 ```python
 def dfs(root): # return count of nodes in the tree
@@ -249,7 +243,7 @@ def search(root, n):
    return root.val == n or dfs(root.left) or dfs(root.right)
 ```
 
-Find if node n or node m is in the tree
+Find either if node n or node m is in the tree
 
 ```python
 def search(root, n, m):
@@ -275,8 +269,11 @@ def search(root, n, m):
    if root.val == n or root.val == m:
       return True
    
-   left = search(root.left, n, m)    # (bool isMThere, bool isNThere) i.e (bool isMThere, position, infinity)
-   right = search(root.right, n, m)  # found 1 node return 1, found both return 2
+   # (bool isMThere, bool isNThere) i.e (bool isMThere, position, infinity)
+   # found 1 node return 1, 
+   # found both return 2
+   left = search(root.left, n, m)
+   right = search(root.right, n, m)
 
    return left and right   
 ```
@@ -284,7 +281,7 @@ def search(root, n, m):
 ### Symmetric Tree
 
 Find whether a binary tree is symmetric (find if 2 trees are mirror images of each other)
-
+```diagram
         1
        / \
       2   2
@@ -292,20 +289,9 @@ Find whether a binary tree is symmetric (find if 2 trees are mirror images of ea
     3   4 4  3
        /     \
       5       5
-
-```mermaid
-graph TD;
-    1 --> 2;
-    1 --> 2;
-    2 --> 3;
-    2 --> 4;
-    2 --> 4;
-    2 --> 3;
-    4 --> 5;
-    4 --> 5;
 ```
-
 ```python
+# Post order DFS
 def symmetric(root):
    def isSymmetric(node1, node2):
       if not node1 and not node2:
@@ -317,6 +303,21 @@ def symmetric(root):
       right = isSymmetric(node1.right, node2.left)
       
       return node1.val == node2.val and left and right
+
+   return isSymmetric(root, root)
+
+# Kinda Pre order DFS
+def symmetric(root):
+   def isSymmetric(node1, node2):
+      if not node1 and not node2:
+         return True
+      if not node1 or not node2 or node1.val != node2.val:
+         return False
+      
+      left = isSymmetric(node1.left, node2.right)
+      right = isSymmetric(node1.right, node2.left)
+      
+      return left and right
 
    return isSymmetric(root, root)
 ```
@@ -336,8 +337,23 @@ A binary tree in which the left and right subtrees of every node differ in heigh
 
 Find if the tree is balanced? `-1 <= depthleft - depthright <= 1 on all subtrees`
 
+```mermaid
+graph TD;
+    1 --> 2;
+    1 --> 3;
+    2 --> 4;
+    2 --> 5;
+    4 --> 8;
+    3 --> 6;
+    3 --> 7;
+    6 --> 9;
+    9 --> 10;
+
+```
+
 ```python
 def validate(root):
+   # Initialize the global variable for answer
    isBalanced = True
 
    def dfs(root):
@@ -347,8 +363,9 @@ def validate(root):
       left = dfs(root.left)
       right = dfs(root.right)
 
+      # Udpate the global variable
       if abs(left - right) > 1:
-         isBalanced = True
+         isBalanced = False
 
       return 1 + max(left, right)
    
@@ -359,7 +376,7 @@ def validate(root):
 """
 The expected output is a boolean value
 But since depth is needed for the balanced check,
-consolidate boolean and depth into "int" as return type
+consolidate boolean and depth (a positive integer) into "int" as return type
 
 Return an int
 int == -1 => Unbalanced denotes
@@ -379,7 +396,7 @@ def validate(root):
 
       # Left depth and right depth difference is more than 1, therefore tree is unbalanced
       if abs(depthLeft - depthRight) > 1:
-         isBalanced = True
+         return -1
 
       # tree is balanced, return depth of the subtree
       return 1 + max(depthLeft, depthRight)
@@ -401,20 +418,6 @@ The height of a complete binary tree is always minimum i.e O(log N)
 
 Find diameter:  Length of the longest path from leaf to leaf
 
-```
-        1
-       / \
-      2   3
-     / \  / \
-    4   5 6  7
-       / \
-      8   9
-     /   / | \
-    10  11 12 14
-   /
-  13
-```
-
 ```mermaid
 graph TD;
     1 --> 2;
@@ -431,6 +434,14 @@ graph TD;
     9 --> 12;
     9 --> 14;
 ```
+
+Extra variable: Depth
+Result: balanced
+1. Bottom up
+2. Extra variable: length of the path from leaf to leaf
+
+If you check any node -> you will see that the diameter that passes through the given node,
+will be depth of the left child and the depth of the right child plus the given node = total
 
 ```python
 def diameter(root):
@@ -464,6 +475,155 @@ def diameter(root):
 
    return dfs(root)
 
+```
+#### Max Difference
+
+Find the maximum difference between an ancestor node and any of its descendant node, where (ancestor.value - descendant.value) is the maximum
+```mermaid
+graph TD;
+    6 --> 2;
+    6 --> 11;
+    2 --> -4;
+    2 --> n1["1"];
+    11 --> 3;
+    11 --> -2;
+    3 --> -3;
+    3 --> n2["1"];
+```
+
+```bash
+Output: 11 - (-3) = 14
+```
+
+| The idea is to get the min/max descendant value of the subtree for any given node.
+
+```python
+def maxDifference(TreeNode root):
+   def dfs(node, min_val, max_val): # pre order
+      pass
+
+   def dfs(node, min_val, result): # post order
+      if not node:
+         return float("inf"), 0
+
+      if not node.left and not node.right:
+         return node.val, 0
+      
+      left_min, left_result = dfs(node.left, )
+      right_min, right_result = dfs(node.right)
+
+      result = max([node.val - left_min, node.val - right_min, result])
+
+      return min([node.val, left_min, right_min], result)
+```
+
+#### Lowest Common Ancestor
+
+Find the lowest common ancestor given 2 nodes in a tree.
+
+- `LCA()` searches for node a and node b in a tree.
+- Return `None` indicated `Not Found`.
+- If either a or b is found in the tree, return the found node.
+- If lowest common ancestor is found, return ancestor.
+
+```mermaid
+graph TD;
+    A --> B;
+    A --> C;
+    B --> D;
+    B --> E;
+    C --> F;
+    C --> G;
+    F --> H;
+    F --> I;
+```
+
+```bash
+Input: Node I and G
+Output: Node C
+```
+
+Lets check what is required?
+
+1. DFS or BFS? - DFS
+2. Preorder or Postorder? -> Postorder (information accumulated from below)
+3. Extra variable required? -> A node (if target is found?)
+4. Possible merge extra variable with result variable? 
+   -> Yes, coz one variable is boolean: bool -> Node
+   -> Denoting False with a node
+   -> Denoting False with a -1
+   -> Denoting both nodes with 2
+   -> Denoting Node with 0
+
+```python
+def lca(root: TreeNode, a: TreeNode, b: TreeNode) -> bool:
+   def dfs(node, a, b):
+      if not node:
+         return node
+      
+      if node in {a, b}:
+         return node
+
+      left = dfs(node.left)
+      right = dfs(node.right)
+
+      # a and b are on the different sides of the root.
+      # Therefore current node / root is the common ancestor
+      if left and right:
+         return node
+      # a, b are on the left, common ancestor is what the left subtree returns
+      if left:
+         return left
+      # a, b are on the right
+      if right:
+         return right
+      
+      # otherwise neither a nor b is in the tree
+      # return left or right
+
+   return dfs(root, a, b) 
+```
+
+#### Binary Tree to DLL
+
+Convert binary tree to doubly linked list in-order sequence.
+
+#### Longest Increasing Path
+
+Find out the longest increasing path from top to bottom in the given tree. (Hint: Search for the longest decreasing path from bottom to top)
+
+```mermaid
+graph TD;
+    6 --> 0a["0"];
+    6 --> 3a["3"];
+    
+    0a --> 1;
+    0a --> 4;
+    
+    4 --> 5a["5"];
+    5a --> 3b["3"];
+    5a --> 0b["0"];
+    
+    1 --> 7;
+    7 --> 9;
+    9 --> 8;
+
+    3a --> 6a["6"];
+    3a --> 4a["4"];
+    
+    6a --> 8a["8"];
+    6a --> 5b["5"];
+    5b --> 7a["7"];
+
+    style 0a fill:#f4a261,stroke:#000,stroke-width:2px;
+    style 1 fill:#f4a261,stroke:#000,stroke-width:2px;
+    style 7 fill:#f4a261,stroke:#000,stroke-width:2px;
+    style 9 fill:#f4a261,stroke:#000,stroke-width:2px;
+```
+
+```bash
+Expected Output: 4
+path: [0, 1, 7, 9] is the longest path
 ```
 
 ### DFS Preorder traversal
@@ -2322,7 +2482,7 @@ while i < j:
       j -= 1
 ```
 
-### Array Partition 1
+### Array Partition 2
 
 Partition for quick sort / quick select
 
@@ -2510,6 +2670,17 @@ while i < len(arr1) and j < len(arr2):
       i += 1
    else:
       j += 1
+```
+
+### Array Partition IV
+
+Given a binary array, put half of 1's to the left and other half to the right.
+
+Input - [1, 0, 0, 1, 0, 1, 1, 1, 0, 1]
+Output - [1, 1, 1, 0, 0, 0, 0, 1, 1, 1]
+
+```
+TBD
 ```
 
 ### Sliding Window - Fixed Size

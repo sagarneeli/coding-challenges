@@ -1,3 +1,6 @@
+from typing import List
+
+
 class Solution:
     def trap(self, height: List[int]) -> int:
         left, right = 0, len(height) - 1
@@ -13,6 +16,5 @@ class Solution:
                 right_max = max(right_max, height[right])
                 result += right_max - height[right]
                 right -= 1
-        
+
         return result
-        

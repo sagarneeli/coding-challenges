@@ -1,10 +1,12 @@
+from typing import List
+
+
 class Solution:
     def camelMatch(self, queries: List[str], pattern: str) -> List[bool]:
-
         def is_match(string):
             M = len(string)
             N = len(pattern)
-            
+
             if M < N:
                 return False
 
@@ -17,7 +19,7 @@ class Solution:
                     i += 1
                 else:
                     return False
-            
+
             if j < N:
                 return False
 
@@ -26,11 +28,11 @@ class Solution:
                     i += 1
                 else:
                     return False
-            
+
             return True
-        
+
         result = []
         for query in queries:
             result.append(is_match(query))
-        
+
         return result

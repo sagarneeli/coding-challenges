@@ -1,3 +1,6 @@
+from typing import List
+
+
 class Solution:
     def twoSumLessThanK(self, nums: List[int], k: int) -> int:
         nums.sort()
@@ -13,5 +16,3 @@ class Solution:
                 right -= 1
 
         return result
-        
-        
