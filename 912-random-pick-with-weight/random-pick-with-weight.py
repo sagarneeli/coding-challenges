@@ -1,9 +1,12 @@
-class Solution:
+from typing import List
+import random
 
+
+class Solution:
     def __init__(self, w: List[int]):
         self.prefix_sums = []
         prefix_sum = 0
-        
+
         for weight in w:
             prefix_sum += weight
             self.prefix_sums.append(prefix_sum)
@@ -24,7 +27,6 @@ class Solution:
                 right = mid
 
         return left
-        
 
 
 # Your Solution object will be instantiated and called as such:

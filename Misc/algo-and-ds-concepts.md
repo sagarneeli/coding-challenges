@@ -502,19 +502,22 @@ def maxDifference(TreeNode root):
    def dfs(node, min_val, max_val): # pre order
       pass
 
-   def dfs(node, min_val, result): # post order
+   def dfs(node, min_val): # post order
       if not node:
          return float("inf"), 0
 
       if not node.left and not node.right:
          return node.val, 0
       
-      left_min, left_result = dfs(node.left, )
-      right_min, right_result = dfs(node.right)
+      left_min, left_result = dfs(node.left, min_val)
+      right_min, right_result = dfs(node.right, min_val)
 
-      result = max([node.val - left_min, node.val - right_min, result])
+      max_diff = max([node.val - left_min, node.val - right_min, left_result, right_result])
 
-      return min([node.val, left_min, right_min], result)
+      return min([node.val, left_min, right_min]), max_diff
+   
+   _, result = dfs(root, float("inf"))
+   return result
 ```
 
 #### Lowest Common Ancestor
@@ -588,6 +591,79 @@ def lca(root: TreeNode, a: TreeNode, b: TreeNode) -> bool:
 
 Convert binary tree to doubly linked list in-order sequence.
 
+```mermaid
+graph TD;
+    D --> B;
+    D --> H;
+    B --> A;
+    B --> C;
+    H --> F;
+    H --> I;
+    F --> E;
+    F --> G;
+```
+
+```python
+class Node:
+   def __init__(self, val, left=None, right=None):
+      self.val = val
+      self.left = left
+      self.right = right
+
+# @return head, tail nodes of a DLL
+def BSTtoDLL(root: Node) -> Node, Node:
+   def dfs(node):
+      if not node:
+         return None, None
+
+      head, tail = node, node
+
+      head_left, tail_left = dfs(node.left)
+      head_right, tail_right = dfs(node.right)
+
+      if head_left: # left isn't empty
+         tail_left.right = node # append root to left list
+         node.left = tail_left
+         head = head_left
+      
+      if head_right: # right isn't empty
+         head_right.left = node # append root to right list
+         node.right = head_right
+         tail = tail_right
+      
+      return head, tail
+   
+   return dfs(root)
+
+# if asked to return head
+"""
+if not root:
+   return None
+
+head, tail = dfs(root)
+tail.right = head
+head.left = tail
+return head
+"""
+```
+
+</br>
+
+##### Output
+
+```mermaid
+
+graph LR;
+    A <--> B;
+    B <--> C;
+    C <--> D;
+    D <--> E;
+    E <--> F;
+    F <--> G;
+    G <--> H;
+    H <--> I;
+```
+
 #### Longest Increasing Path
 
 Find out the longest increasing path from top to bottom in the given tree. (Hint: Search for the longest decreasing path from bottom to top)
@@ -626,6 +702,115 @@ Expected Output: 4
 path: [0, 1, 7, 9] is the longest path
 ```
 
+## Top Down DFS
+
+Scenario: The answer of the current tree is based on the parent.\
+Solution: Find out the current node builds up on top of its parent.\
+Complexity: O(n)\
+
+### Top Down vs Bottom Up
+
+Count levels of a binary tree
+
+```mermaid
+graph TD;
+    A --> B;
+    B --> C;
+    B --> D;
+    C --> E;
+    C --> F;
+    D --> G;
+```
+
+```python
+def height(root): # bottom-up dfs
+   if not node:
+      return -1
+   left = height(root.left)
+   right = height(root.right)
+   return 1 + max(left, right) 
+   # bottom up handles root node at the return statment
+```
+
+```python
+def depth(root, d): # top-down dfs
+   if not node:
+      return d - 1
+   left = depth(root.left, d + 1)
+   right = depth(root.right, d + 1)
+   return 1 + max(left, right)
+   # top down handles root by input parameters
+```
+
+|          | Top-down DFS | Bottom-up DFS |
+|---------------|-------------|--------------|
+| **Definition** | The answer on the current node is built from the answer on its **parent** | The answer on the current node is built from the answer on its **children** |
+| **Traversal Direction** | Visits all paths from **root to leaf** | Visits all subtrees from **bottom to top** |
+| **Handling Nodes** | Handles the current node while **pushing** into the log stack (by input parameter) | Handles the current node while **popping** from the log stack (by return statement) |
+
+### Validate Binary Search Tree
+
+BST keep the keys in sorted order i.e `left <= mid < right`
+
+```mermaid
+graph TD;
+    9 --> 2;
+    9 --> 17;
+    
+    2 --> 0;
+    2 --> 4;
+    
+    0 --> -1;
+    
+    4 --> 3;
+    4 --> 7;
+    
+    17 --> 11;
+    17 --> 20;
+    
+    11 --> 10;
+    11 --> 14;
+```
+
+```python
+def isBST(root: TreeNode) -> bool:
+   def dfs(node, floor, ceiling):
+      if not node:
+         return True
+      
+      if floor <= node.val < ceiling and dfs(node.left, floor, node.val) and dfs(node.right, node.val, ceiling):
+         return True
+
+      return False
+
+   return dfs(root, float("-inf"), float("inf"))
+
+### Width Of A Binary Tree
+
+Find out the maximum width of a binary tree
+
+```python
+def max_width(root: TreeNode) -> int:
+   leftbound, rightbound = 0, 0
+   
+   def dfs(node, column):
+      if not node:
+         return
+
+      nonlocal leftbound
+      nonlocal rightbound
+
+      dfs(node.left, column - 1)
+      dfs(node.right, column + 1)
+
+      # update leftbound and rightbound
+      leftbound = min(leftbound, column)
+      rightbound = max(rightbound, column)
+
+   dfs(root, 0)
+   return rightbound - leftbound + 1
+```
+
 ### DFS Preorder traversal
 
 Usually used for problems like Root -> leaf, width of a tree, etc.
@@ -633,13 +818,51 @@ The extra variable is passed as an input parameter
 
 ### Search Paths
 
-Scenario: Visit and search every root to leaf path in a tree.
-Solution: Keep track of log stack with an extra stack as an input parameter.
+Scenario: Visit and search every root to leaf path in a tree.\
+Solution: Keep track of log stack with an extra stack as an input parameter.\
 Complexity - O(N)
 
-Print all paths in tree,
-where no access to root.val
-only access to root.left.val and root.right.val
+### Print all paths in tree,
+
+`where no access to root.val
+only access to root.left.val and root.right.val`
+
+```mermaid
+graph TD;
+    A --> B;
+    A --> C;
+    B --> E;
+    C --> F;
+    C --> G;
+    F --> H;
+    F --> I;
+```
+
+```python
+def printPaths(root: TreeNode) -> None:
+   def dfsPath(node):
+      if not node:
+         return
+
+      # preorder add node
+      path.append(node.val)
+      if not node.left and not node.right: # leaf node
+         print(path)
+
+      dfs(node.left, path)
+      dfs(node.right, path)
+      # post order pop node
+      path.pop() # backtracking (withdraws the action took by preorder)
+
+   path = [] # follows the log stack
+   dfsPath(root)
+```
+
+### Find the Pseudo Palindromic Path
+
+### Return the count of leaf nodes containing letter "n" in it
+
+This is exactly same as maze search problem
 
 ### Backtracking
 
@@ -665,6 +888,69 @@ def printPaths(root):
 
    dfs([])
    return
+```
+
+### kth Ancestor
+ 
+Find the ancestor node that is k levels above the target node in a binary tree.
+- Every node's value is unique and positive.
+- `k` and target are positive integers. 
+- You are given the root node of the tree.
+
+```bash
+Input1: target = 5, k = 2
+Output: 8
+
+Input2: target = 6, k = 2
+Output: 4
+    
+Input3: target = 7, k = 3
+Output: 4
+    
+Input4: target = 2, k = 2
+Output: -1 (no ancestor is k levels above target)
+```
+
+```mermaid
+graph TD;
+    4 --> 2;
+    4 --> 8;
+    2 --> 1;
+    2 --> 3;
+    8 --> 6;
+    8 --> 9;
+    6 --> 5;
+    6 --> 7;
+```
+
+```python
+def k_ancestors(root: Node, target: int, k: int) -> int:
+    kth_ancestor = -1
+
+    def dfs(node):
+        if not node:
+            return -1
+        
+        if node.val == target:
+            return 1  # Start depth count
+
+        nonlocal kth_ancestor
+
+        left_depth = dfs(node.left)
+        right_depth = dfs(node.right)
+
+        # Select the valid depth (whichever is non-negative)
+        depth = max(left_depth, right_depth)
+
+        if depth != -1:  # Valid depth found
+            if k == depth:
+                kth_ancestor = node.val
+            return depth + 1  # Increment depth
+
+        return -1
+
+    dfs(root)
+    return kth_ancestor
 ```
 
 #### N-ary Tree
@@ -3958,3 +4244,7 @@ start: speed = 1
 
 A forward for 1 step and then double its speed
 R stop and turn around and reset speed to 1
+
+
+
+

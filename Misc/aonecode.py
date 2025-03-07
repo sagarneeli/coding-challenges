@@ -99,3 +99,69 @@ def print_unique(nums):
             print(nums[i])
         else:
             continue
+
+
+# Input           i
+denominations = [5, 5, 5, 10, 10, 20, 20]  #
+totalSum = 25
+
+# Output
+[5, 20], [20, 5], [10, 10, 5], [5, 10, 10], [10, 5, 10], [5, 5, 5, 5, 5]
+
+# Permutation
+#     Infinite of each coin: constant-K-ary tree
+#     One of each coin: changing-K-ary tree with a boolean array input
+#     Duplicates in coins: K-ary tree with a dictionary of remaining {coin: count} state variable
+# Combination
+#     Infinite of each coin: 1/0 binary tree or chaning-K-ary tree with index i (start of available coins)
+#     One of each coin: i+1
+#     Duplicates in coins:
+
+
+# [5, 5, 5, 10, 10, 20, 20]
+def combinations(coins, totalSum):
+    def backtrack(coins, totalSum, i, stack):
+        # Base case
+        if totalSum == 0:
+            print(stack)
+            return
+
+        if totalSum < 0 or i >= len(coins):
+            return
+
+        # Binary tree
+        # Take coins[i]
+        stack.append(coins[i])
+        backtrack(coins, totalSum - coins[i], i + 1, stack)
+        stack.pop()
+        i += 1
+        # Don't take coins[i]
+        while i < len(coins) and (coins[i] == coins[i - 1]):
+            i = i + 1
+
+        backtrack(coins, totalSum, i, stack)
+
+    coins.sort()
+    backtrack(coins, totalSum, 0, [])
+
+
+combinations(denominations, totalSum)
+
+"happyholidays"
+["ha", "ppy", "holi", "s", "day"]
+
+#       #          |  |  |      |       |
+# sortedList = [5, 5, 5, 5, 10, 10, 20, 20]
+# for i in range(1, len(sortedList)):
+#     if sortedList[i] == sortedList[i - 1]:
+#         continue
+#     else:
+#         print(sortedList[i], i)
+
+# Input
+# [5,5,5,10,20,20]
+# totalSum 25
+
+# Letter Tile Possibilities
+# ABBCCCC
+# N = 4
