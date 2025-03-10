@@ -16,12 +16,13 @@ class Solution:
             if not node:
                 return
             
-            if low <= node.val <= high:
-                result += node.val
             if low < node.val:
                 dfs(node.left)
             if node.val < high:
                 dfs(node.right)
+            
+            if low <= node.val <= high:
+                result += node.val
         
         result = 0
         dfs(root)
