@@ -281,6 +281,7 @@ def search(root, n, m):
 ### Symmetric Tree
 
 Find whether a binary tree is symmetric (find if 2 trees are mirror images of each other)
+
 ```diagram
         1
        / \
@@ -290,6 +291,7 @@ Find whether a binary tree is symmetric (find if 2 trees are mirror images of ea
        /     \
       5       5
 ```
+
 ```python
 # Post order DFS
 def symmetric(root):
@@ -331,7 +333,6 @@ Complexity - O(N)
 What is a balanced binary tree?
 A binary tree in which the left and right subtrees of every node differ in height by no more than 1.
 `-1 <= depthLeft - depthRight <= 1 on all subtrees`
-
 
 ### Validate Balance Binary Tree
 
@@ -405,6 +406,35 @@ def validate(root):
 
 ```
 
+### Maximum Average Subtree
+
+`let the dfs function return sum of values and tree size`
+
+```python
+
+def getMaxAvgTree(root: TreeNode) -> int:
+   max_avg_tree = None
+   max_avg = float("-inf") # global variable
+
+   def dfs(node):
+      if not node:
+         return 0, 0
+      
+      values_left, size_left = dfs(node.left)
+      values_right, size_right = dfs(node.right)
+
+      values = values_left + node.val + values_right
+      size = size_left + size_right + 1
+      avg = values / size
+
+      if (node.left or node.right) and max_avg < avg: # ignore leaf nodes
+         max_avg = avg
+         max_avg_tree = node
+      
+      return values, size
+```
+
+
 What is a full binary tree?
 A tree in which every node other than the leaves have 2 children.
 or binary tree with the maximum number of nodes is a full binary tree.
@@ -476,9 +506,11 @@ def diameter(root):
    return dfs(root)
 
 ```
+
 #### Max Difference
 
 Find the maximum difference between an ancestor node and any of its descendant node, where (ancestor.value - descendant.value) is the maximum
+
 ```mermaid
 graph TD;
     6 --> 2;
@@ -496,6 +528,15 @@ Output: 11 - (-3) = 14
 ```
 
 | The idea is to get the min/max descendant value of the subtree for any given node.
+
+```bash
+Fill template
+result = max(
+   max(abs(node.val - min(left_min, right_min)))
+   ,
+   max(abs(node.val - min(left_max, right_max)))
+)
+```
 
 ```python
 def maxDifference(TreeNode root):
@@ -645,6 +686,11 @@ tail.right = head
 head.left = tail
 return head
 """
+
+# Note
+"""
+you can do this using Inorder iterator in the non-recursive way so that you pop the nodes in the inorder sequence and then you just have to link the popped nodes together into a linked list instead of pushing them into your list
+"""
 ```
 
 </br>
@@ -700,6 +746,10 @@ graph TD;
 ```bash
 Expected Output: 4
 path: [0, 1, 7, 9] is the longest path
+```
+
+```python
+
 ```
 
 ## Top Down DFS
@@ -811,6 +861,34 @@ def max_width(root: TreeNode) -> int:
    return rightbound - leftbound + 1
 ```
 
+### Range Sum BST.
+
+### Find the sum of nodes within the range (lo, hi)
+
+`Preorder - cummulative sum`
+
+```python
+def rangeSumBST(root: TreeNode, lo: int, hi: int) -> int:
+   result = 0
+
+   def dfs(node):
+      if not node:
+         return
+
+      nonlocal result
+
+      if lo < node.val:
+         dfs(node.left)
+      if node.val < hi:
+         dfs(node.right)
+      
+      if lo <= node.val <= hi:
+         result += node.val
+
+      dfs(root)
+      return result
+```
+
 ### DFS Preorder traversal
 
 Usually used for problems like Root -> leaf, width of a tree, etc.
@@ -864,6 +942,145 @@ def printPaths(root: TreeNode) -> None:
 
 This is exactly same as maze search problem
 
+### Find the Inorder Successor of a Target node in a BST
+
+```mermaid
+graph TB;
+    A((8)) --> B((2))
+    A --> C((10))
+    B --> D((1))
+    B --> E((6))
+    D --> F((0))
+    E --> G((3))
+    E --> H((7))
+    G --> I((4))
+    C --> J((9))
+    C --> K((12))
+```
+
+```python
+def inorderSuccessor(root: TreeNode, p: TreeNode) -> Optional[TreeNode]:
+   def dfs(node):
+      nonlocal found_p, result
+      if not node or result:
+            return
+
+      dfs(node.left)
+
+      # If we've already seen p, the current node is the successor
+      if found_p and result is None:
+            result = node
+            return
+
+      # Check if this node is p
+      if node == p:
+            found_p = True
+
+      dfs(node.right)
+
+   found_p = False
+   result = None
+   dfs(root)
+   return result
+```
+
+### Build Inorder Iterator of a Binary Tree
+
+```mermaid
+flowchart TB
+    n8((8)) --> n2((2))
+    n8 --> n10((10))
+    n2 --> n1((1))
+    n2 --> n6((6))
+    n1 --> n0((0))
+    n6 --> n4((4))
+    n6 --> n7((7))
+    n4 --> n3((3))
+    n4 --> n5((5))
+    n10 --> n9((9))
+    n10 --> n12((12))
+
+```
+
+```python
+class InorderIterator:
+   def __init__(self, root: TreeNode) -> None:
+      self.stack = []
+      self._move_left(root)
+
+   def has_next(self) -> bool:
+      return len(self.stack) > 0
+
+   def next(self) -> TreeNode:
+      if not self.has_next():
+         raise Exception("End of iterator")
+      
+      curr = self.stack.pop()
+      self._move_left(curr.right)
+
+      return curr
+   
+   def _move_left(self, node: TreeNode) -> None:
+      while node:
+         self.stack.append(node)
+         node = node.left
+```
+
+#### Inorder
+
+```python
+def inorder(root: TreeNode):
+   stack = []
+   node = root
+
+   while stack:
+      if node: # move left
+         stack.append(node)
+         node = node.left
+      else: # left empty pop self and move right
+         curr = node.pop()
+         print(node.val, end="")
+         node = node.right
+```
+
+
+Apply DFS non-recursively using a Stack
+
+### Preorder Iterator of a Binary Tree
+
+```mermaid
+graph TB;
+    A((8)) --> B((2))
+    A --> C((10))
+    B --> D((1))
+    B --> E((6))
+    D --> F((0))
+    E --> G((3))
+    E --> H((7))
+    G --> I((4))
+    C --> J((9))
+    C --> K((12))
+```
+
+```bash
+stack = [12, 9, 4]
+```
+
+```python
+def preorder(root):
+   stack = [root]
+
+   while stack:
+      # Pop left to right
+      node = stack.pop()
+      print(f"{node.val}, {" "}")
+      # Push right to left
+      if node.right:
+         stack.append(node.right)
+      if node.left:
+         stack.append(node.left)
+```
+
 ### Backtracking
 
 Withdraws anything that you did before
@@ -892,7 +1109,8 @@ def printPaths(root):
 
 ### kth Ancestor
  
-Find the ancestor node that is k levels above the target node in a binary tree.
+ Find the ancestor node that is k levels above the target node in a binary tree.
+
 - Every node's value is unique and positive.
 - `k` and target are positive integers. 
 - You are given the root node of the tree.
@@ -953,10 +1171,76 @@ def k_ancestors(root: Node, target: int, k: int) -> int:
     return kth_ancestor
 ```
 
-#### N-ary Tree
+### Postorder Iterator
 
-Scenario - A tree can have an arbitrary number of children
-Solution - Find out how the root node builds on top of the result from the subtrees
+```mermaid
+graph TB;
+    A((8)) --> B((2))
+    A --> C((10))
+    B --> D((1))
+    B --> E((6))
+    D --> F((0))
+    E --> G((3))
+    E --> H((7))
+    G --> I((4))
+    C --> J((9))
+    C --> K((12))
+```
+
+```python
+class TreeNode:
+   def __init__(self, val=0, left=None, right=None):
+      self.val = val
+      self.left = left
+      self.right = right
+
+class PostorderIterator:
+   def __init__(self, root):
+      self._stack = []
+      self._lastPop = None
+      self._move_deep_left(root)
+
+   def has_next(self):
+      return len(self._stack) > 0
+
+   def next(self):
+      if not self.has_next():
+         raise Exception("End of iterator")
+
+      self._lastPop = self._stack.pop()
+      node = self._lastPop
+
+      # If the popped node has a right child, process its right subtree
+      if self._stack and self._stack[-1].right == node:
+         self._move_deep_left(self._stack.pop().right)
+
+      return node.val  # Return the value of the visited node
+
+   def _move_deep_left(self, node):
+      """
+      Push nodes to stack ensuring postorder order: Left -> Right -> Root
+      """
+      while node:
+         self._stack.append(node)
+         # If a node has a right child, push it after the left child
+         if node.right:
+               self._stack.append(node.right)
+         node = node.left
+
+```
+
+Note:
+Postorder DFS - finds LCA
+Preorder DFS - finds the deepest leaves
+All the cumulative max sum is postorder
+
+If everything looks up to the root node as a baseline then its a preorder
+
+
+### N-ary Tree
+
+Scenario - A tree can have an arbitrary number of children.\
+Solution - Find out how the root node builds on top of the result from the subtrees.
 
 ```python
 # Each tree node can have arbitrary  number of children
