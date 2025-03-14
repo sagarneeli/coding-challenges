@@ -743,6 +743,32 @@ graph TD;
     style 9 fill:#f4a261,stroke:#000,stroke-width:2px;
 ```
 
+```python
+# dfs() return length of the increasing path to root in the current subtree
+def increasingPath(root: TreeNode):
+   longest_increasing_path = 0
+
+   def dfs(node):
+      if not node:
+         return 0
+
+      nonlocal longest_increasing_path
+
+      left = dfs(node.left)
+      right = dfs(node.right)
+
+      left_increasing_path = 1 + left if node.left and node.left.val > node.val else 1
+      right_increasing_path = 1 + right if node.right and node.right.val > node.val else 1
+
+      length = max(left_increasing_path, right_increasing_path)
+      longest_increasing_path = max(longest_increasing_path, length)
+
+      return length
+   
+   dfs(root)
+   return longest_increasing_path
+```
+
 ```bash
 Expected Output: 4
 path: [0, 1, 7, 9] is the longest path
@@ -861,7 +887,7 @@ def max_width(root: TreeNode) -> int:
    return rightbound - leftbound + 1
 ```
 
-### Range Sum BST.
+### Range Sum BST
 
 ### Find the sum of nodes within the range (lo, hi)
 
@@ -926,9 +952,10 @@ def printPaths(root: TreeNode) -> None:
       path.append(node.val)
       if not node.left and not node.right: # leaf node
          print(path)
-
+      
       dfs(node.left, path)
       dfs(node.right, path)
+
       # post order pop node
       path.pop() # backtracking (withdraws the action took by preorder)
 
@@ -937,6 +964,21 @@ def printPaths(root: TreeNode) -> None:
 ```
 
 ### Find the Pseudo Palindromic Path
+
+```mermaid
+```
+
+Note:
+
+This is similar to maze searching problem for graphs
+
+- From a source node you check how many path can enter the destination node
+- if you enter the destination node return one if you enter a blocked node or enter
+- an invalid node return zero and then you add up the results of the four calls
+
+```python
+
+```
 
 ### Return the count of leaf nodes containing letter "n" in it
 
@@ -1043,7 +1085,6 @@ def inorder(root: TreeNode):
          node = node.right
 ```
 
-
 Apply DFS non-recursively using a Stack
 
 ### Preorder Iterator of a Binary Tree
@@ -1079,6 +1120,47 @@ def preorder(root):
          stack.append(node.right)
       if node.left:
          stack.append(node.left)
+```
+
+### DFS Tree Array
+
+Given the preorder sequence of a BST, find the in-order sequence of the tree.
+
+```mermaid
+flowchart TB
+    nD((D))
+    nB((B))
+    nH((H))
+    nA((A))
+    nC((C))
+    nF((F))
+    nI((I))
+    nE((E))
+    nG((G))
+
+    nD --> nB
+    nD --> nH
+    nB --> nA
+    nB --> nC
+    nH --> nF
+    nH --> nI
+    nF --> nE
+    nF --> nG
+```
+
+```python
+def getInorder(preorder):
+   stack, i = [], 0
+
+   while i < len(preorder):
+      if not stack or preorder[i] < stack[-1]:
+         stack.append(preorder[i])
+         i += 1
+      else:
+         print(stack.pop())
+      
+   while stack:
+      print(stack.pop())
 ```
 
 ### Backtracking
@@ -1345,6 +1427,763 @@ Complexity - O(NlogN)
 
 BFS - Highest Common descendant
 Double BFS
+
+### Helper Method Template
+
+1. Instantiate scope variables
+2. Return result
+3. a) Create helper method
+   b) Invoke helper method
+4. Base case
+5. Recursive case
+
+### Permutations and Combinations problems
+
+The problem of permutations/combinations summing up to a certain amount can turn into a tree.
+The root node contains the entire problem for amount A.
+
+#### Permutation Tree
+
+At every level we can try and make the tree relatively easier to understand
+All the K choices available at a root node lead to K child nodes of root.
+Each child node contains a subproblem.
+
+The key to solving these problems is to determine if the tree covers all possible choices we can make about coin selection and it's outcomes.
+
+Do we have each face value once or infinite times?
+
+Implement all paths in a permutation tree
+
+To figure out the time and space complexity of permutation and combination sum problems, we will have to find out
+
+1. What n-ary tree it is?
+2. Height of the tree.
+
+Example - k-nary tree, Height H = k^H
+
+```python
+# All Permutation Paths Template
+def print_permutation_tree(amount: int, coins: List[int]):
+   def backtrack(amount, path):
+      # base cases
+      if amount < 0: # the end of an invalid path
+         return
+      if amount == 0: # the end of a valid path
+         print(path)
+         return
+      # general cases
+      for coin in coins: # visit child nodes
+         path.append(coin)
+         backtrack(amount - coin, path)
+         path.pop()
+   
+   backtrack(amount, [])
+```
+
+In coin change problem what determines the height of the tree
+
+- We have figure out whether the input parameters amount or coins.length is the height of the tree.
+- Say for worst case the least coin is 1 cent in that case, we will decrement -1 at each level until we hit Amount = 0. Therefor H = amount
+
+`H = A / least(coins)`
+`k = coins.length` i.e the number of selections you can make in a tree
+
+Total Complexity = coins.length ^ (amount / min(coins))
+
+Usually such problems are time consuming because they grown exponentially.
+Even using DP the space would grown exponentially. Therefore there is no way around it.
+
+### Combination Tree
+
+The key is to not reuse a coin that has been discarded (the coin already used)
+
+Example in coin change problem, we can keep coins in the increasing amount of coins - [5, 5, 10]
+
+A = 20, i = 0, p = []
+
+Everything from 0 -> i discarded, i -> end available
+
+So is it still a 3-nary tree? what choice are available for root?
+For combinations ignore the discarded nodes when making the choices.
+Make a placeholder index `i` for coins array.
+Coins before index i are discarded and ignored.
+
+And this kind of approach is very common in DP problems. It's called 1/0 tree (yes/no tree)
+Example, when we have such a problem
+
+```
+A = 20, i = 0, p = []
+at i = 0, we have 2 choice where take the coin or don't take the coin
+               A = 20, i = 0, p = []     coins = [5, 10, 20]
+   select coins[i] /  \ discard coins[i]          0   1   2
+   A = 15, ?, p = [5]     A = 20, i = 1, p = []
+```
+
+Time Complexity - 2 ^ (Amount vs max(coins.length))
+DP would be optimal for 0/1 trees
+less efficient for K-nary trees
+Why? because when we filling the DP array from bottom to top, every node depends of 2 child nodes, hence we visit the previous 2 indices in the array and get the values, whereas for K-nary trees we have to go back k times to the indices
+
+But if it's recursive solution, k-nary tree is preferred as we don't travel the discarded portion
+
+1/0 tree every DP block takes 2 former block to build the solution, whereas k-nary tree takes k changes
+
+K-nary tree is sub optimal for DP, whereas relatively optimal for recursive solution.
+
+Combination tree can be optimal by using K-nary tree and not 0/1 tree
+
+```
+Example
+A = 20, i = 0, p = [] 
+we have 0 -> end available to make choices,
+hence at level 1 we will have A = 15, i = 0, p = [5], A = 10, i = 1, p = [10], A = 0, i = 2, p = [20]
+level 2 A = 10, i = 0, p = [5, 5], A = 5, i = 1, p = [5, 10], ..
+```
+
+The tree is more skewed towards the left and time complexity on average case is still 2 ^ (Amount)
+
+```python
+"""
+Input - A = 20, coins = [5, 10, 20]
+Output - 
+Combinations
+[
+   [5, 5, 5, 5],
+   [5, 5, 10],
+   [10, 10],
+   [20]
+]
+"""
+
+# All Combination Paths Template k-nary tree version
+def print_combination_tree(amount: int, coins: List[int]):
+   def backtrack(amount, i, path):
+      # base cases
+      if amount < 0: # the end of an invalid path
+         return
+      if amount == 0: # the end of a valid path
+         print(path)
+         return
+      # general cases
+      for j in range(i, len(coins): # visit child nodes
+         path.append(coin[j])
+         backtrack(amount - coins[j], j, path)
+         path.pop()
+   
+   backtrack(amount, 0, [])
+
+
+# All Combination Paths Template 1/0 tree version (binary tree)
+def print_combination_tree(amount: int, coins: List[int]):
+   def backtrack(amount, i, path):
+      # base cases
+      if amount == 0: # the end of a valid path
+         print(path)
+         return
+      if amount < 0 or i >= len(coins): # the end of an invalid path
+         return
+      # general cases
+      # 1st child is YES, left hand side
+      path.append(coins[i])
+      backtrack(amount - coins[i], i, path)
+      path.pop()
+
+      # 2nd child is NO 
+      backtrack(amount, i + 1, path)
+   
+   backtrack(amount, 0, [])
+```
+
+### Coin Change
+
+Given N kinds of coin values [c0, c1, c2, ...], find out all the coin permutations and combinations summing up to the amount \(A\). You may assume that every value has an infinite number of coins available.
+
+Input
+A = 20
+coins = [5, 10, 20]
+
+Output
+Combinations
+[5, 5, 5, 5]
+[5, 5, 10]
+[10, 10]
+[20]
+
+Permutations
+[5, 5, 5, 5]
+[5, 5, 10]
+[5, 10, 5]
+[10, 5, 5]
+[10, 10]
+[20]
+
+# Understanding the Coin-Change Problem: Six Variants of Combinations & Permutations
+
+## Overview
+
+Coin-change and combinatorial problems may look similar at first glance, but subtle differences in constraints require entirely different approaches. In our discussion, we identified **six variants** of the coin-change problem based on two main axes:
+
+1. **Output Type:**  
+   - **Combinations:** Order does not matter.  
+   - **Permutations:** Order matters.
+
+2. **Coin Availability:**  
+   - **Infinite copies of each coin.**  
+   - **Exactly one copy of each coin.**  
+   - **Input with duplicates** (e.g., the input lists coins such as `[5, 5, 10, 10, 20]`).
+
+This document explains these variants in detail, provides diagrams and decision trees, and includes example implementations for each variant.
+
+---
+
+## 1. The Basic Problem Statement
+
+**Problem:**  
+Given a set of coin denominations (for example, `[5, 10, 20]`) and a target amount \(A\) (for example, \(20\)), determine all the ways to reach \(A\) using the available coins.
+
+Depending on how the coins are provided and how the solution is defined, the variants are as follows:
+
+- **Combinations:** The order of coins does not matter.  
+- **Permutations:** The order of coins matters.
+
+**Example (Infinite Copies):**
+
+- **Combinations** might yield:
+  - `[5, 5, 5, 5]`
+  - `[5, 5, 10]`
+  - `[10, 10]`
+  - `[20]`
+  
+- **Permutations** might include (since order matters):
+  - `[5, 5, 10]`
+  - `[5, 10, 5]`
+  - `[10, 5, 5]`
+  - And also the combinations listed above.
+
+---
+
+## 2. The Six Variants Explained
+
+### 2.1 Combinations
+
+**Variant A: Combinations with Infinite Coins**  
+- **Constraint:** You may reuse any coin as many times as needed.  
+- **Approach:** Use backtracking with an **index** to enforce non-decreasing order (preventing duplicate sets).  
+- **Example Result for \(A = 20\):**  
+  `[5, 5, 5, 5]`, `[5, 5, 10]`, `[10, 10]`, `[20]`.
+
+**Variant B: Combinations with Exactly One Copy of Each Coin**  
+- **Constraint:** Each coin can be used at most once.  
+- **Approach:** Use backtracking and ensure that after using a coin, you move to coins at later indices.  
+- **Example:** With coins `[5, 10, 20]`, the only valid combination for \(20\) may be `[20]` (if no other combination sums to 20).
+
+**Variant C: Combinations with Duplicates in the Input**  
+- **Constraint:** The coin list includes duplicates (e.g., `[5, 5, 10, 10, 20]`).  
+- **Approach:** Sort the list and use backtracking while skipping duplicate coin positions to avoid using a coin more than its available count.
+
+---
+
+### 2.2 Permutations
+
+**Variant D: Permutations with Infinite Coins**  
+- **Constraint:** Order matters, and coins can be used repeatedly.  
+- **Approach:** Conceptualize the solution as a **k-ary tree** (where \( k \) equals the number of coin types). Every node branches to all available coin types.  
+- **Example:** With coins `[5, 10, 20]`, each level of the tree will branch into three children.
+
+**Variant E: Permutations with Exactly One Copy of Each Coin**  
+- **Constraint:** Each coin is available only once, and order matters.  
+- **Approach:** Use a visited set or array to ensure each coin is used only once.  
+- **Example:** For coins `[5, 10, 20]`, valid permutations include `[5, 10, 20]`, `[5, 20, 10]`, `[10, 5, 20]`, etc.
+
+**Variant F: Permutations with Duplicates in the Input**  
+- **Constraint:** The coin list contains duplicates, and order matters.  
+- **Approach:** Use a dictionary (or Counter) to track the count of each coin, decrementing as coins are used in backtracking.
+
+---
+
+## 3. Diagrams & Decision Trees
+
+### 3.1 Overall Decision Tree
+
+The following diagram outlines the decision process for selecting the variant:
+
+```mermaid
+flowchart TD
+    A[Start: Coin-Change Problem]
+    B[Choose Output Type]
+    C1[Combinations]
+    C2[Permutations]
+    D[Determine Coin Availability]
+    E1[Infinite Copies]
+    E2[One Copy Each]
+    E3[Duplicates in Input]
+
+    A --> B
+    B --> C1
+    B --> C2
+    C1 --> D
+    C2 --> D
+    D --> E1
+    D --> E2
+    D --> E3
+
+    E1 --> F1[Variant A: Comb, Infinite]
+    E2 --> F2[Variant B: Comb, One Each]
+    E3 --> F3[Variant C: Comb, Duplicates]
+    E1 --> G1[Variant D: Perm, Infinite]
+    E2 --> G2[Variant E: Perm, One Each]
+    E3 --> G3[Variant F: Perm, Duplicates]
+```
+
+### 3.2 Permutations Tree Diagram (Infinite Coins)
+
+For the simplest permutation case (infinite coins), the tree structure is as follows:
+
+```mermaid
+flowchart TD
+    Root((Start))
+    A((5))
+    B((10))
+    C((20))
+    
+    Root --> A
+    Root --> B
+    Root --> C
+
+    A --> A1((5))
+    A --> B1((10))
+    A --> C1((20))
+
+    B --> A2((5))
+    B --> B2((10))
+    B --> C2((20))
+
+    C --> A3((5))
+    C --> B3((10))
+    C --> C3((20))
+```
+
+Each level of the tree represents the addition of another coin, with each branch corresponding to one of the available coin types.
+
+### 3.3 Combinations with an Index
+
+To enforce non-decreasing order (and avoid duplicate sets) in combinations, consider the following simplified decision diagram:
+
+```mermaid
+flowchart TD
+    Start([Start: target=20])
+    Choose5([Choose coin 5 at index 0])
+    Remain([Remaining target after adding 5])
+    NextIndex([Move to next coin index])
+    Next10([Choose coin 10])
+    
+    Start --> Choose5
+    Choose5 --> Remain
+    Remain --> NextIndex
+    NextIndex --> |Reuse coin at current index| Choose5
+    NextIndex --> |Or choose next coin: 10| Next10
+```
+
+Once a coin is chosen at an index, the algorithm moves forward so that combinations like [10, 5] (which is the same as [5, 10]) are avoided.
+
+## Coin-Change Problem Variants: Example Implementations, Test Cases, and Dry-Run Diagrams
+
+This document provides runnable Python code for six variants of the coin-change problem. For each variant we include:
+- A brief description of the approach.
+- The full Python implementation.
+- A test case with expected outputs.
+- A simplified dry-run decision tree diagram (using Mermaid) that explains the recursion/backtracking flow.
+
+---
+
+### 4.1 Variant A: Combinations with Infinite Coins
+
+**Description:**  
+You have an infinite supply of each coin. Use backtracking with an index to enforce a non-decreasing order (thus avoiding duplicate combinations).  
+For example, with coins `[5, 10, 20]` and target `20`, valid combinations include `[5, 5, 5, 5]`, `[5, 5, 10]`, `[10, 10]`, and `[20]`.
+
+### Implementation
+
+```python
+def coin_combinations_infinite(coins, target):
+    results = []
+    def backtrack(i, current, total):
+        if total == target:
+            results.append(current[:])
+            return
+        if total > target or i >= len(coins):
+            return
+        # Option 1: use coin at index i (reuse allowed)
+        current.append(coins[i])
+        backtrack(i, current, total + coins[i])
+        current.pop()
+        # Option 2: move to next coin
+        backtrack(i + 1, current, total)
+    backtrack(0, [], 0)
+    return results
+
+# Test case for Variant A
+if __name__ == '__main__':
+    coins = [5, 10, 20]
+    target = 20
+    print("Variant A (Combinations with Infinite Coins):")
+    print(coin_combinations_infinite(coins, target))
+```
+
+Dry-Run Diagram
+
+```mermaid
+flowchart TD
+    A[Start: total=0, index=0, current=[]]
+    B[Choose coin 5 at index 0 → current=[5], total=5]
+    C[Call backtrack(index=0, current=[5], total=5)]
+    D[Choose coin 5 again at index 0 → current=[5,5], total=10]
+    E[Call backtrack(index=0, current=[5,5], total=10)]
+    F[Eventually, total becomes 20 with current=[5,5,5,5]]
+    G[Backtrack to try coin 10 at index 1, forming [5,5,10]]
+    A --> B
+    B --> C
+    C --> D
+    D --> E
+    E --> F
+    F --> G
+```
+
+### 4.2 Variant B: Combinations with Exactly One Copy of Each Coin
+
+**Description:** 
+Each coin may be used at most once. We again use backtracking with an index that increases on each recursive call to ensure that a coin is not reused.
+For example, with coins [5, 10, 20] and target 20, the only valid combination might be [20].
+
+Implementation
+
+```python
+
+def coin_combinations_one(coins, target):
+    results = []
+    def backtrack(index, current, total):
+        if total == target:
+            results.append(current[:])
+            return
+        if total > target:
+            return
+        for i in range(index, len(coins)):
+            current.append(coins[i])
+            backtrack(i + 1, current, total + coins[i])
+            current.pop()
+    backtrack(0, [], 0)
+    return results
+
+# Test case for Variant B
+if __name__ == '__main__':
+    coins = [5, 10, 20]
+    target = 20
+    print("Variant B (Combinations with One Copy Each):")
+    print(coin_combinations_one(coins, target))
+```
+
+Dry-Run Diagram
+
+```mermaid
+flowchart TD
+    A[Start: total=0, index=0, current=[]]
+    B[Choose coin 5 at index 0 → current=[5], total=5]
+    C[Call backtrack(index=1, current=[5], total=5)]
+    D[Next coin from index=1: choose 10 → current=[5,10], total=15]
+    E[Call backtrack(index=2, current=[5,10], total=15)]
+    F[From index=2, choose 20 → current=[5,10,20], total=35 (exceeds target)]
+    G[Backtrack and try coin 20 at index 0 → current=[20], total=20]
+    A --> B
+    B --> C
+    C --> D
+    D --> E
+    E --> F
+    F --> G
+```
+
+### 4.3 Variant C: Combinations with Duplicates in the Input
+
+**Description:** 
+The input list may contain duplicates (e.g., [5, 5, 10, 10, 20]). We first sort the coins and then use backtracking with an index while skipping duplicates at the same recursion level.
+For target 20, valid combinations could be [5,5,10], [10,10], and [20].
+
+Implementation
+```python
+def coin_combinations_duplicates(coins, target):
+    results = []
+    coins.sort()  # sort to handle duplicates
+    def backtrack(index, current, total):
+        if total == target:
+            results.append(current[:])
+            return
+        if total > target:
+            return
+        for i in range(index, len(coins)):
+            # Skip duplicate coins at the same recursive level.
+            if i > index and coins[i] == coins[i - 1]:
+                continue
+            current.append(coins[i])
+            backtrack(i + 1, current, total + coins[i])
+            current.pop()
+    backtrack(0, [], 0)
+    return results
+
+# Test case for Variant C
+if __name__ == '__main__':
+    coins = [5, 5, 10, 10, 20]
+    target = 20
+    print("Variant C (Combinations with Duplicates in Input):")
+    print(coin_combinations_duplicates(coins, target))
+```
+
+Dry-Run Diagram
+```mermaid
+flowchart TD
+    A[Start: total=0, index=0, current=[]]
+    B[Sorted coins: [5,5,10,10,20]]
+    C[Choose first 5 (index 0) → current=[5], total=5]
+    D[Call backtrack(index=1, current=[5], total=5)]
+    E[At index 1, choose second 5 → current=[5,5], total=10]
+    F[Call backtrack(index=2, current=[5,5], total=10)]
+    G[From index 2, choose 10 → current=[5,5,10], total=20]
+    H[Found valid combination: [5,5,10]]
+    A --> B
+    B --> C
+    C --> D
+    D --> E
+    E --> F
+    F --> G
+    G --> H
+```
+
+### 4.4 Variant D: Permutations with Infinite Coins
+
+**Description:** 
+Here, order matters and coins may be reused indefinitely. The solution space is like a k-ary tree, where each recursive call can choose any coin.
+For example, with coins [5, 10, 20] and target 20, valid permutations include various orderings of [5,5,5,5], [5,5,10] (and its rearrangements), [10,10], and [20].
+
+Implementation
+```python
+def coin_permutations_infinite(coins, target):
+    results = []
+    def backtrack(current, total):
+        if total == target:
+            results.append(current[:])
+            return
+        if total > target:
+            return
+        for coin in coins:
+            current.append(coin)
+            backtrack(current, total + coin)
+            current.pop()
+    backtrack([], 0)
+    return results
+
+# Test case for Variant D
+if __name__ == '__main__':
+    coins = [5, 10, 20]
+    target = 20
+    print("Variant D (Permutations with Infinite Coins):")
+    print(coin_permutations_infinite(coins, target))
+```
+
+Dry-Run Diagram
+```mermaid
+flowchart TD
+    A[Start: total=0, current=[]]
+    B[Choose coin 5 → current=[5], total=5]
+    C[Call backtrack(current=[5], total=5)]
+    D[From current=[5], choose coin 5 again → current=[5,5], total=10]
+    E[Call backtrack(current=[5,5], total=10)]
+    F[Eventually, reach current=[5,5,10] → total=20]
+    G[Valid permutation found: [5,5,10]]
+    A --> B
+    B --> C
+    C --> D
+    D --> E
+    E --> F
+    F --> G
+```
+
+### 4.5 Variant E: Permutations with Exactly One Copy of Each Coin
+
+**Description:** 
+Each coin is available only once. We use a visited (or used) array to ensure no coin is reused.
+For coins [5, 10, 20] and target 20, the only valid permutation is [20] (since other sums would require more coins).
+
+Implementation
+
+```python
+def coin_permutations_single(coins, target):
+    results = []
+    used = [False] * len(coins)
+    def backtrack(current, total):
+        if total == target:
+            results.append(current[:])
+            return
+        if total > target:
+            return
+        for i in range(len(coins)):
+            if not used[i]:
+                used[i] = True
+                current.append(coins[i])
+                backtrack(current, total + coins[i])
+                current.pop()
+                used[i] = False
+    backtrack([], 0)
+    return results
+
+# Test case for Variant E
+if __name__ == '__main__':
+    coins = [5, 10, 20]
+    target = 20
+    print("Variant E (Permutations with One Copy Each):")
+    print(coin_permutations_single(coins, target))
+```
+
+Dry-Run Diagram
+
+```mermaid
+flowchart TD
+    A[Start: total=0, current=[], used=[F,F,F]]
+    B[Choose coin 20 (index 2) → current=[20], total=20, used=[F,F,T]]
+    C[Total equals target; add [20] to results]
+    A --> B
+    B --> C
+```
+
+### 4.6 Variant F: Permutations with Duplicates in the Input
+
+**Description:** 
+The input may include duplicates (e.g., [5, 5, 10, 10, 20]), and order matters. Use a dictionary (Counter) to track how many of each coin remain available.
+For target 20, valid permutations include [20] and all distinct orderings of [5, 5, 10] and [10, 10].
+
+Implementation
+
+```python
+from collections import Counter
+
+def coin_permutations_duplicates(coins, target):
+    counter = Counter(coins)
+    unique_coins = list(counter.keys())
+    results = []
+    def backtrack(current, total):
+        if total == target:
+            results.append(current[:])
+            return
+        if total > target:
+            return
+        for coin in unique_coins:
+            if counter[coin] > 0:
+                counter[coin] -= 1
+                current.append(coin)
+                backtrack(current, total + coin)
+                current.pop()
+                counter[coin] += 1
+    backtrack([], 0)
+    return results
+
+# Test case for Variant F
+if __name__ == '__main__':
+    coins = [5, 5, 10, 10, 20]
+    target = 20
+    print("Variant F (Permutations with Duplicates in Input):")
+    print(coin_permutations_duplicates(coins, target))
+```
+
+Dry-Run Diagram
+
+```mermaid
+flowchart TD
+    A[Start: total=0, current=[], counter: {5:2, 10:2, 20:1}]
+    B[Choose coin 5 → current=[5], total=5, counter: {5:1, 10:2, 20:1}]
+    C[Choose coin 5 again → current=[5,5], total=10, counter: {5:0, 10:2, 20:1}]
+    D[Choose coin 10 → current=[5,5,10], total=20, counter: {5:0, 10:1, 20:1}]
+    E[Found valid permutation: [5,5,10]]
+    A --> B
+    B --> C
+    C --> D
+    D --> E
+```
+
+## 4. Example Implementations
+
+Below are example implementations for each of the six variants.
+
+### 4.1 Variant A: Combinations with Infinite Coins
+
+```python
+def coin_combinations_infinite(coins, target):
+    results = []
+    def backtrack(i, current, total):
+        if total == target:
+            results.append(current[:])
+            return
+        if total > target or i >= len(coins):
+            return
+        # Option 1: use coin at index i (reuse allowed)
+        current.append(coins[i])
+        backtrack(i, current, total + coins[i])
+        current.pop()
+        # Option 2: move to next coin
+        backtrack(i + 1, current, total)
+    backtrack(0, [], 0)
+    return results
+```
+
+### 4.2 Variant B: Combinations with Exactly One Copy of Each Coin
+
+```python
+def coin_combinations_one(coins, target):
+    results = []
+    def backtrack(index, current, total):
+        if total == target:
+            results.append(current[:])
+            return
+        if total > target:
+            return
+        for i in range(index, len(coins)):
+            current.append(coins[i])
+            backtrack(i + 1, current, total + coins[i])
+            current.pop()
+    backtrack(0, [], 0)
+    return results
+```
+
+## 5. Generalization to Other Problems
+
+These approaches extend beyond coin-change problems and can be applied to various backtracking challenges such as:
+
+- **Word Break / String Slicing:**  
+  Splitting a string into valid words by using an index to enforce order.
+  
+- **Decode Ways:**  
+  Converting a string of digits into possible letter messages (e.g., "12" → "AB" or "L"), where each valid partition is similar to selecting a coin.
+
+The core concept in all these problems is tracking which elements have been used (or which positions in the sequence have been reached) and ensuring that choices adhere to the problem's constraints—whether that's enforcing order, limiting reuse, or accounting for duplicate counts.
+
+## 6. Summary & Takeaways
+
+- **Six Variants:**  
+  The coin-change problem splits into six variants based on:
+  - **Output Type:** Combinations vs. Permutations.
+  - **Coin Availability:** Infinite copies, one-of-each, or duplicates in the input.
+  
+- **Key Techniques:**  
+  - **Combinations:**  
+    - Use an index to enforce non-decreasing order and prevent duplicate arrangements.
+  - **Permutations:**  
+    - For one-of-each coin: use a visited set or array.
+    - For duplicates: use a dictionary (or `Counter`) to track coin counts.
+  - **Infinite Coins:**  
+    - Model the solution space as a k-ary tree, where each node branches into all available coin types.
+  
+- **Broader Applications:**  
+  These strategies are widely applicable to various backtracking and dynamic programming challenges, such as string segmentation, word break problems, and decode ways.
+
+
+
+This version ensures each coin is used at most once by advancing the index after each selection.
 
 ### Graphs
 
@@ -1718,8 +2557,29 @@ We can include the backtracking above, but it will only slow down the function, 
 
 #### Puzzle Problem - 2
 
-```python
+Given a puzzle matrix where 1 denotes pathways and 0 denotes walls. At any pathway, you may walk one block to the four neighboring pathways on the top, bottom, left, or right. The entrance of the puzzle is at the top-left corner. The exit is at the bottom-right corner.
 
+Find out the total number of ways to walk through the puzzle.
+
+Input
+
+```bash
+[
+   [1, 1, 0, 1, 0, 1],
+   [1, 0, 1, 0, 1, 1],
+   [1, 1, 0, 0, 0, 1],
+   [1, 0, 1, 0, 1, 1],
+   [1, 1, 0, 1, 0, 1]
+]
+```
+
+Output
+
+```bash
+7
+```
+
+```python
 dfs_helper(0, 0, matrix)
 
 def dfs_helper(i: int, j: int, matrix: list) -> bool:
