@@ -860,7 +860,9 @@ def isBST(root: TreeNode) -> bool:
       return False
 
    return dfs(root, float("-inf"), float("inf"))
+```
 
+```python
 ### Width Of A Binary Tree
 
 Find out the maximum width of a binary tree
@@ -1431,8 +1433,8 @@ Double BFS
 ### Helper Method Template
 
 1. Instantiate scope variables
-2. Return result
-3. a) Create helper method
+2. Return result \
+   a) Create helper method \
    b) Invoke helper method
 4. Base case
 5. Recursive case
@@ -1442,11 +1444,24 @@ Double BFS
 The problem of permutations/combinations summing up to a certain amount can turn into a tree.
 The root node contains the entire problem for amount A.
 
+Coin-change and combinatorial problems may look similar at first glance, but subtle differences in constraints require entirely different approaches. In our discussion, we identified **six variants** of the coin-change problem based on two main axes:
+
+1. **Output Type:**  
+   - **Combinations:** Order does not matter.  
+   - **Permutations:** Order matters.
+
+2. **Coin Availability:**  
+   - **Infinite copies of each coin.**  
+   - **Exactly one copy of each coin.**  
+   - **Input with duplicates** (e.g., the input lists coins such as `[5, 5, 10, 10, 20]`).
+
+This document explains these variants in detail, provides diagrams and decision trees, and includes example implementations for each variant.
+
 #### Permutation Tree
 
-At every level we can try and make the tree relatively easier to understand
-All the K choices available at a root node lead to K child nodes of root.
-Each child node contains a subproblem.
+- At every level we can try and make the tree relatively easier to understand
+- All the K choices available at a root node lead to K child nodes of root.
+- Each child node contains a subproblem.
 
 The key to solving these problems is to determine if the tree covers all possible choices we can make about coin selection and it's outcomes.
 
@@ -2180,8 +2195,6 @@ The core concept in all these problems is tracking which elements have been used
   
 - **Broader Applications:**  
   These strategies are widely applicable to various backtracking and dynamic programming challenges, such as string segmentation, word break problems, and decode ways.
-
-
 
 This version ensures each coin is used at most once by advancing the index after each selection.
 
