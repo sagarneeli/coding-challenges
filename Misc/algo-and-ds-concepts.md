@@ -2198,6 +2198,8 @@ The core concept in all these problems is tracking which elements have been used
 
 This version ensures each coin is used at most once by advancing the index after each selection.
 
+<img width="723" alt="image" src="https://github.com/user-attachments/assets/6a333dc6-46db-46ef-9711-380ba5c8a2b2" />
+
 ### Graphs
 
 1. The size of the graph is the number of nodes in the graph.
