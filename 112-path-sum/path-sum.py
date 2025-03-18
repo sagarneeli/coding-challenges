@@ -18,7 +18,7 @@ class Solution:
                 left = dfs(node.left, path_sum)
                 right = dfs(node.right, path_sum)
             
-            path_sum -= node.val
+            # path_sum -= node.val
 
             return left or right
         
