@@ -862,7 +862,6 @@ def isBST(root: TreeNode) -> bool:
    return dfs(root, float("-inf"), float("inf"))
 ```
 
-```python
 ### Width Of A Binary Tree
 
 Find out the maximum width of a binary tree
@@ -887,6 +886,57 @@ def max_width(root: TreeNode) -> int:
 
    dfs(root, 0)
    return rightbound - leftbound + 1
+```
+
+### Sum Columns In a Tree
+
+Find sum of each column of tree nodes in a binary tree
+
+Eg: Input
+
+```bash
+      2
+     / \
+    7   5
+   / \   \
+  2   6   9
+     / \   \
+    5  11  4 
+```
+
+Output
+
+```bash
+sum = [2, 12, 8, 20, 9]
+       2   7  2   5  9
+           5  6  11
+                  4
+```
+
+```python
+def sum_column(root: TreeNode) -> int:
+   def dfs(node, column):
+      if not node:
+         return
+
+      column_map[column].append(node.val)
+
+      dfs(node.left, column - 1)
+      dfs(node.right, column + 1)
+
+      # update leftbound and rightbound
+      leftbound = min(leftbound, column)
+      rightbound = max(rightbound, column)
+
+   column_map = defaultdict(list)
+   leftbound, rightbound = 0, 0
+   dfs(root, 0)
+
+   result = []
+   for column in range(leftbound, rightbound):
+      result.append(sum(column_map[column]))
+
+   return result
 ```
 
 ### Range Sum BST
@@ -930,9 +980,6 @@ Complexity - O(N)
 
 ### Print all paths in tree,
 
-`where no access to root.val
-only access to root.left.val and root.right.val`
-
 ```mermaid
 graph TD;
     A --> B;
@@ -954,15 +1001,72 @@ def printPaths(root: TreeNode) -> None:
       path.append(node.val)
       if not node.left and not node.right: # leaf node
          print(path)
-      
-      dfs(node.left, path)
-      dfs(node.right, path)
+      else:
+         dfs(node.left, path)
+         dfs(node.right, path)
 
       # post order pop node
       path.pop() # backtracking (withdraws the action took by preorder)
 
    path = [] # follows the log stack
    dfsPath(root)
+   return path
+```
+
+```bash
+when no access to root.val
+only access to root.left.val and root.right.val
+```
+
+```python
+def printPaths(root: TreeNode) -> None:
+   def dfsPath():
+      if not root:
+         return
+
+      if not root.left and not root.right: # leaf node
+         print(path)
+      else:
+         path.append(root.left.val)
+         dfs(root.left, path)
+         path.pop()
+
+         path.append(root.right.val)
+         dfs(root.right, path)
+         path.pop()
+
+      # post order pop node
+      path.pop() # backtracking (withdraws the action took by preorder)
+
+   path = [] # follows the log stack
+   dfsPath()
+   return path
+```
+
+### Print Path Sums
+
+Print the sum of all paths from root to leaf
+
+
+```python
+def printPathSum(root: TreeNode) -> None:
+   def dfsPath(node, path_sum):
+      if not node:
+         return
+
+      nonlocal path_sum
+      # preorder add node
+      path_sum += node.val
+      if not node.left and not node.right: # leaf node
+         print(path_sum)
+      else:
+         dfs(node.left, path_sum)
+         dfs(node.right, path_sum)
+
+      # path_sum += node.val # you don't really need this
+
+   dfsPath(root, 0)
+   return path
 ```
 
 ### Find the Pseudo Palindromic Path
@@ -1320,6 +1424,30 @@ All the cumulative max sum is postorder
 
 If everything looks up to the root node as a baseline then its a preorder
 
+### Anagram To Target Node In a Tree
+
+Given a tree where every node has a letter, find if there is a root-to-leaf path that is anagram to the target node.
+
+```bash
+
+         e
+      /     \
+     n       n
+   /  \    /   \
+ n     a  e     g
+        /   \
+      a      c
+
+Input - target: "one"
+Output - False
+
+target: target: "aone"
+True
+```
+
+Hashtable or ASCII array of 256/26
+One string increments count of letter
+The other one decrements count of letter
 
 ### N-ary Tree
 
@@ -1412,9 +1540,9 @@ Scenario - Recover the tree based on it's DFS traversal sequence.
 Solution - Look for the subsequence of left and right subtree to recurse on.
 Complexity - O(NlogN)
 
-### BFS template
+### BFS Template
 
-```
+```bash
  while (!Q.empty())
  {
      size = Q.size()
@@ -1681,18 +1809,21 @@ Depending on how the coins are provided and how the solution is defined, the var
 
 ### 2.1 Combinations
 
-**Variant A: Combinations with Infinite Coins**  
+**Variant A: Combinations with Infinite Coins** 
+
 - **Constraint:** You may reuse any coin as many times as needed.  
 - **Approach:** Use backtracking with an **index** to enforce non-decreasing order (preventing duplicate sets).  
 - **Example Result for \(A = 20\):**  
   `[5, 5, 5, 5]`, `[5, 5, 10]`, `[10, 10]`, `[20]`.
 
-**Variant B: Combinations with Exactly One Copy of Each Coin**  
+**Variant B: Combinations with Exactly One Copy of Each Coin** 
+
 - **Constraint:** Each coin can be used at most once.  
 - **Approach:** Use backtracking and ensure that after using a coin, you move to coins at later indices.  
 - **Example:** With coins `[5, 10, 20]`, the only valid combination for \(20\) may be `[20]` (if no other combination sums to 20).
 
-**Variant C: Combinations with Duplicates in the Input**  
+**Variant C: Combinations with Duplicates in the Input**
+
 - **Constraint:** The coin list includes duplicates (e.g., `[5, 5, 10, 10, 20]`).  
 - **Approach:** Sort the list and use backtracking while skipping duplicate coin positions to avoid using a coin more than its available count.
 
@@ -1701,16 +1832,19 @@ Depending on how the coins are provided and how the solution is defined, the var
 ### 2.2 Permutations
 
 **Variant D: Permutations with Infinite Coins**  
+
 - **Constraint:** Order matters, and coins can be used repeatedly.  
 - **Approach:** Conceptualize the solution as a **k-ary tree** (where \( k \) equals the number of coin types). Every node branches to all available coin types.  
 - **Example:** With coins `[5, 10, 20]`, each level of the tree will branch into three children.
 
 **Variant E: Permutations with Exactly One Copy of Each Coin**  
+
 - **Constraint:** Each coin is available only once, and order matters.  
 - **Approach:** Use a visited set or array to ensure each coin is used only once.  
 - **Example:** For coins `[5, 10, 20]`, valid permutations include `[5, 10, 20]`, `[5, 20, 10]`, `[10, 5, 20]`, etc.
 
 **Variant F: Permutations with Duplicates in the Input**  
+
 - **Constraint:** The coin list contains duplicates, and order matters.  
 - **Approach:** Use a dictionary (or Counter) to track the count of each coin, decrementing as coins are used in backtracking.
 
@@ -2199,6 +2333,201 @@ The core concept in all these problems is tracking which elements have been used
 This version ensures each coin is used at most once by advancing the index after each selection.
 
 <img width="723" alt="image" src="https://github.com/user-attachments/assets/6a333dc6-46db-46ef-9711-380ba5c8a2b2" />
+
+Pushing a coin in preorder and popping the coin in postorder, we will be able to print all the paths in the tree. i.e which are the premutations we are looking for.
+
+Some problems need count of valid permutations
+
+### Impelement - print all paths in a permutation tree
+
+- Every node in the tree is equivalent to a recursive function call
+- Parameters in the node are input parameters of function call.
+
+```python
+# Infinite Each Coin
+def permutation(amount: int, coins: list) -> None:
+   def dfs(path):
+      # base cases
+      if amount < 0: # the end of an invalid path
+         return
+      if amount == 0: # the end of a valid path
+         print(path)
+         return
+      
+      # General case
+      # Loop through children
+      # Note- for this bit of version we only have access to the
+      # child node we don't have access to the root node it's own 
+      # value therefore putting path append before the for loop
+      # cannot work here
+      # in order to make it work we need to move the statement (path.append) into the for loop
+      for coin in coins:
+         path.append(coin)
+         dfs(amount - coin, coins, path)
+         path.pop()
+```
+
+#### Similarly for counting the number of permutations
+
+```python
+def permutation(amount: int, coins: list) -> None:
+   def dfs(amount):
+      # base cases
+      if amount < 0: # the end of an invalid path
+         return 0
+      if amount == 0: # the end of a valid path
+         return 1
+      
+      # General case
+      # Loop through children
+      count = 0
+      for coin in coins:
+         count += dfs(amount - coin)
+
+      return count
+   
+   return dfs(amount)
+
+print(permutations(20, [5, 10, 15])) # 6
+
+```
+
+#### Another variant find out the length of the shortest permutation
+
+In this above example it will be - 1 i.e [20], what is the minimum number of coins you can use to achieve the total sum.
+
+```python
+def permutation(amount: int, coins: list) -> None:
+   def dfs(amount, path):
+      # base cases
+      if amount < 0: # the end of an invalid path
+         return float("inf")
+      if amount == 0: # the end of a valid path
+         return len(path)
+      
+      # General case
+      # Loop through children
+      count = float("inf")
+      for coin in coins:
+         path.append(coin)
+         count = min(count, dfs(amount - coin, path))
+         path.pop()
+
+      return count
+   
+   return dfs(amount, [])
+
+print(permutations(20, [5, 10, 15])) # 1
+
+# Without using the path stack
+# We can do pre-order DFS, depth of the node from root to leaf
+
+```python
+def permutation(amount: int, coins: list) -> None:
+   def dfs(amount, depth):
+      # base cases
+      if amount < 0: # the end of an invalid path
+         return float("inf")
+      if amount == 0: # the end of a valid path
+         return depth
+      
+      # General case
+      # Loop through children
+      count = float("inf")
+      for coin in coins:
+         count = min(count, dfs(amount - coin, 1 + depth))
+
+      return count
+   
+   return dfs(amount, 0)
+
+print(permutations(30, [5, 10, 15])) # 2
+```
+
+**Permutation**
+
+- Infinite of each coin: constant-K-ary tree
+- One of each coin: changing-K-ary tree with a boolean array input
+- Duplicates in coins: K-ary tree with a dictionary of remaining {coin: count} state variable
+
+**Combination**
+
+- Infinite of each coin: 1/0 binary tree or chaning-K-ary tree with index i (start of available coins)
+- One of each coin: Same as above, except that when we branch out to the child, we include i+1
+- Duplicates in coins: 
+
+```python
+# Infinite of each coins
+def combinations(coins, amount):
+   def backtrack(amount, i):
+      # base case
+      if amount < 0: # ori >= len(coins)
+         return
+      if amount == 0 and i >= len(coins):
+         print(path)
+         return
+
+      # General case: 0 / 1 Binary tree
+      stack.append(coins[i])
+      # Take coins[i]
+      backtrack(amount - coins[i], i, stack)
+      stack.pop()
+
+      # Don't take coins[i]
+      backtrack(amount, i + 1, stack)
+   
+   backtrack(amount, 0, [])
+
+denomiations = [10, 5, 20]
+totalSum = 25
+
+# one of each coin
+def combinations(coins, amount):
+   def backtrack(amount, i):
+      # base case
+      if amount < 0: # or i >= len(coins)
+         return
+      if amount == 0 and i >= len(coins):
+         print(path)
+         return
+
+      # General case: 0 / 1 Binary tree
+      stack.append(coins[i])
+      # Take coins[i]
+      backtrack(amount - coins[i], i + 1, stack)
+      stack.pop()
+
+      # Don't take coins[i]
+      backtrack(amount, i + 1, stack)
+   
+   backtrack(amount, 0, [])
+
+# Duplicates in coins
+def combinations(coins, amount):
+   def backtrack(amount, i):
+      # base case
+      if amount < 0:
+         return
+      if amount == 0 and i >= len(coins):
+         print(path)
+         return
+
+      # General case: 0 / 1 Binary tree
+      stack.append(coins[i])
+      # Take coins[i]
+      backtrack(amount - coins[i], i + 1, stack)
+      stack.pop()
+
+      i += 1
+      # Don't take coins[i]
+      while i < len(coins) and coins[i] == coins[i - 1]:
+         i += 1
+
+      backtrack(amount, i, stack)
+   
+   coins.sort()
+   backtrack(amount, 0, [])
+```
 
 ### Graphs
 
@@ -5010,12 +5339,50 @@ Complexity - O(N)
 
 #### Text Editor
 
-Given 
+Given a string of typing on a text editor, return the text finally appeared on the editor. "#" means backspace
 
+```bash
+typing = "abcd#e##fg#h###i"
 
-
+Expected Output = ai
+```
 
 ```python
+def edit(typing):
+   stack = []
+
+   for key in typing:
+      if key != "#":
+         stack.append(key)
+      elif stack:
+         stack.pop()
+
+   return "".join(stack)
+```
+
+Two options when dealing with such problems
+
+1. Use count stack of pop signals (traverse the string backwards i.e R -> L)
+2. Keep the length of the stack (L -> R)
+
+```python
+def edit(typing):
+   count = 0
+   result = ""
+   
+   for key in typing[::-1]:
+      if key != "#":
+         if count > 0:
+            count -= 1
+         else:
+            result += key
+      else:
+         count += 1
+
+   return result[::-1]
+```
+
+#### Balance Parenthesis
 
 Build a data structure of intervals to allow for search of a number that was not present in any of the intervals in faster than linear time.
 You may assume the range of numbers is [1, n];
