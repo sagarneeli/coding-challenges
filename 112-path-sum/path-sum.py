@@ -11,15 +11,14 @@ class Solution:
                 return False
 
             path_sum += node.val
-            
+
             if not node.left and not node.right:
-                return path_sum == targetSum
+                return  targetSum == path_sum
             else:
                 left = dfs(node.left, path_sum)
                 right = dfs(node.right, path_sum)
             
-            # path_sum -= node.val
-
+            path_sum -= node.val
             return left or right
         
         return dfs(root, 0)
