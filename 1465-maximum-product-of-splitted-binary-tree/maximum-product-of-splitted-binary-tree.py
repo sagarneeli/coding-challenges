@@ -12,7 +12,9 @@ class Solution:
         def get_total_sum(node):
             if not node:
                 return 0
-            return node.val + get_total_sum(node.left) + get_total_sum(node.right)
+            left = get_total_sum(node.left)
+            right = get_total_sum(node.right)
+            return node.val + left + right
         
         total_sum = get_total_sum(root)
         max_product = 0
